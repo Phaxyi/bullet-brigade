@@ -1,14 +1,18 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
 	[SerializeField]
-	private int speedMult;
+	private int moveSpeed;
+
+	[SerializeField]
+	private int rotateSpeed;
 
 	private Rigidbody2D rb;
-	private Vector2 direction;
+	private Vector2 moveDir;
 
     public void Awake()
     {
@@ -17,12 +21,19 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {		
-       rb.linearVelocity = direction * speedMult;
+    	rb.linearVelocity = moveDir * moveSpeed;
+
+		if (moveDir != Vector2.zero)
+		{	
+			Quaternion targetRotation = Quaternion.LookRotation(transform.forward, moveDir);
+			Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
+
+			rb.SetRotation(rotation);
+		}
     }
 
 	public void OnMove(InputValue inputVal)
 	{
-		Debug.Log("Sup bro");
-		direction = inputVal.Get<Vector2>();
+		moveDir = inputVal.Get<Vector2>();
 	}
 }
