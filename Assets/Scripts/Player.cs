@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	public float health;
-	public bool canDamage = true;
+	[field: SerializeField]
+	public float Health { get; private set; }
+
+	[field: SerializeField]
+	public bool CanDamage { get; private set; } = true;
 
 	private SpriteRenderer rd;
 	private float lastHitTime = 0;
 
 	public void TakeDamage(float damage)
 	{
-		health -= damage;
-		if (health <= 0)
+		Health -= damage;
+		if (Health <= 0)
 		{
 			Debug.Log("im already dead...");
 			return;
@@ -19,7 +22,7 @@ public class Player : MonoBehaviour
 		
 		// TODO: VFX
 		lastHitTime = Time.time;
-		Debug.Log($"player now at {health} health.");
+		Debug.Log($"player now at {Health} health.");
 	}
 
 	private void Awake()
@@ -34,11 +37,11 @@ public class Player : MonoBehaviour
 		if (timeSinceHit < 0.25)
 		{
 			rd.enabled = timeSinceHit % 0.1 < 0.05; // blink effect
-			canDamage = false;
+			CanDamage = false;
 		}
 		else
 		{
-			canDamage = true;
+			CanDamage = true;
 		}
 	}
 }

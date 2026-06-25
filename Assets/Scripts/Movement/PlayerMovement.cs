@@ -4,13 +4,13 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
 	[SerializeField]
-	private int moveSpeed;
+	private float moveSpeed;
 
 	[SerializeField]
-	private int rotateSpeed;
+	private float rotateSpeed;
 
 	private Rigidbody2D rb;
-	private Vector2 moveDir;
+	private Vector2 moveDir = Vector2.zero;
 
     public void Awake()
     {
