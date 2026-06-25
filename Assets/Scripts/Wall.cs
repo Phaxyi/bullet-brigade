@@ -30,8 +30,8 @@ public class Wall : MonoBehaviour
 		// functionally useless if no damage to be dealt
 		if (!Instakill && Damage <= 0) return;
 
-		var plr = collision.gameObject.GetComponent<Player>();
-		if (plr == null || !plr.CanDamage) return;
+		Player plr = collision.gameObject.GetComponent<Player>();
+		if (plr == null || !plr.CanTakeDamage) return;
 
 		plr.TakeDamage(Instakill ? float.PositiveInfinity : Damage);
 		rd.color = hitColor;

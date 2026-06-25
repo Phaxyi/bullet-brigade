@@ -20,23 +20,28 @@ public class Chaser : MonoBehaviour
 	private float rotateSpeed;
 
 	private Rigidbody2D rb;
+	private Entity ent;
 	private Player plr;
 	private Vector2 moveDir = Vector2.zero;
 
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
+		ent = GetComponent<Entity>();
 		plr = FindAnyObjectByType<Player>();
 	}
 
 	private void FixedUpdate()
 	{
-		Vector2 dirToPlr = (plr.transform.position - transform.position);
-		
-		if (dirToPlr.magnitude < chaseRange) Chase(dirToPlr);
-		else Idle();
+		if (ent.Dead || plr.Dead) return;
 
-		SetRotation();
+		Vector2 dirToPlr = (plr.transform.position - transform.position);
+		if (dirToPlr.magnitude < chaseRange) Chase(dirToPlr); else Idle();
+
+		if (moveDir != Vector2.zero)
+		{
+			AdjustRotation();
+		}
 	}
 
 	private void Chase(Vector2 dirToPlr)
@@ -50,14 +55,11 @@ public class Chaser : MonoBehaviour
 		moveDir = Vector2.zero;
 	}
 
-	private void SetRotation()
+	private void AdjustRotation()
 	{
-		if (moveDir != Vector2.zero)
-		{	
-			Quaternion targetRotation = Quaternion.LookRotation(transform.forward, moveDir);
-			Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
+		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, moveDir);
+		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
 
-			rb.SetRotation(rotation);
-		}
+		rb.SetRotation(rotation);
 	}
 }

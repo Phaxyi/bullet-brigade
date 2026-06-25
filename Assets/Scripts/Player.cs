@@ -1,47 +1,37 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
-	[field: SerializeField]
-	public float Health { get; private set; }
+	[SerializeField]
+	private float moveSpeed;
 
-	[field: SerializeField]
-	public bool CanDamage { get; private set; } = true;
+	[SerializeField]
+	private float rotateSpeed;
+	
+	private Vector2 moveDir = Vector2.zero;
 
-	private SpriteRenderer rd;
-	private float lastHitTime = 0;
+    public void FixedUpdate()
+    {
+		if (Dead) return;
+    	rb.linearVelocity = moveDir * moveSpeed;
 
-	public void TakeDamage(float damage)
-	{
-		Health -= damage;
-		if (Health <= 0)
+		if (moveDir != Vector2.zero)
 		{
-			Debug.Log("im already dead...");
-			return;
+			AdjustRotation();
 		}
-		
-		// TODO: VFX
-		lastHitTime = Time.time;
-		Debug.Log($"player now at {Health} health.");
+    }
+
+	public void OnMove(InputValue inputVal)
+	{
+		moveDir = inputVal.Get<Vector2>();
 	}
 
-	private void Awake()
+	private void AdjustRotation()
 	{
-		var renderer = transform.Find("Renderer");
-		rd = renderer.GetComponent<SpriteRenderer>();
-	}
+		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, moveDir);
+		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
 
-	private void Update()
-	{
-		float timeSinceHit = Time.time - lastHitTime;
-		if (timeSinceHit < 0.25)
-		{
-			rd.enabled = timeSinceHit % 0.1 < 0.05; // blink effect
-			CanDamage = false;
-		}
-		else
-		{
-			CanDamage = true;
-		}
+		rb.SetRotation(rotation);
 	}
 }
