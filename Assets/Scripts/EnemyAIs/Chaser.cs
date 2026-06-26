@@ -3,6 +3,7 @@
 	Wanders around randomly when outside range.
 */
 
+using System;
 using UnityEngine;
 
 public class Chaser : MonoBehaviour
@@ -16,12 +17,15 @@ public class Chaser : MonoBehaviour
 	[SerializeField]
 	private float chaseRange;
 
+	[SerializeField]
+	private float preIdlePause;
+
 	private Rigidbody2D rb;
 	private Entity entity;
 	private Player plr;
 
 	private Vector2 moveDir = Vector2.zero;
-	private float stateChangeTime = -100;
+	private float stateChangeTime = float.NegativeInfinity;
 
 	private float perlinX;
 	private float perlinY;
@@ -29,10 +33,9 @@ public class Chaser : MonoBehaviour
 	private Vector2 savedMoveDir;
 
 	private const float rotateSpeed = 200;
-	private const float TAU = (float)System.Math.PI * 2;
+	private const float TAU = (float)Math.PI * 2;
 
-	delegate void StateFunc(Vector2 dirToPlr);
-	StateFunc stateFunc;
+	Action<Vector2> stateFunc;
 
 	private void Awake()
 	{
@@ -40,8 +43,8 @@ public class Chaser : MonoBehaviour
 		entity = GetComponent<Entity>();
 		plr = FindAnyObjectByType<Player>();
 
-		perlinX = Random.Range(0f, 10000f);
-		perlinY = Random.Range(0f, 10000f);
+		perlinX = UnityEngine.Random.Range(0f, 10000f);
+		perlinY = UnityEngine.Random.Range(0f, 10000f);
 	}
 
 	private void FixedUpdate()
@@ -60,14 +63,13 @@ public class Chaser : MonoBehaviour
 		}
 	}
 
-	private void ChangeState(StateFunc func)
+	private void ChangeState(Action<Vector2> func)
 	{
 		if (stateFunc == func) return;
 
 		stateFunc = func;
 		stateChangeTime = Time.time;
 		savedMoveDir = moveDir;
-		Debug.Log(func);
 	}
 
 	private void Chase(Vector2 dirToPlr)
@@ -82,16 +84,16 @@ public class Chaser : MonoBehaviour
 
 		// short pause before wandering
 		float timeSinceStateChange = Time.time - stateChangeTime;
-		if (timeSinceStateChange < 1) return;
+		if (timeSinceStateChange < preIdlePause) return;
 
 		// use perlin noise to decide movement
 		// lerp savedMoveDir w/ moveDir to prevent rotational jerk upon Idle statechange
-		float speedAdjust = Mathf.Min(timeSinceStateChange - 1, 5) * 1/5;
+		float speedAdjust = Mathf.Min(timeSinceStateChange - preIdlePause, 5) * 1/5;
 		perlinStep += Time.fixedDeltaTime / 5;
 		
 		float rand = Mathf.Clamp(Mathf.PerlinNoise(
 			perlinX + perlinStep,
-			perlinY + perlinStep
+			perlinY - perlinStep
 		), 0, 1) * TAU;
 
 		moveDir = new Vector2(Mathf.Cos(rand), Mathf.Sin(rand)).normalized;
