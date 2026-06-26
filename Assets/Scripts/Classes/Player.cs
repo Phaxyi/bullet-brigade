@@ -6,9 +6,7 @@ public class Player : Entity
 	[SerializeField]
 	private float moveSpeed;
 
-	[SerializeField]
-	private float rotateSpeed;
-	
+	private const float rotateSpeed = 200;
 	private Vector2 moveDir = Vector2.zero;
 
     public void FixedUpdate()
