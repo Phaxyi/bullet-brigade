@@ -6,40 +6,33 @@
 using System;
 using UnityEngine;
 
+// TODO: proper variable naming + underscore
+
 public class Entity : MonoBehaviour
 {
-	[field: SerializeField]
-	public bool CanTakeDamage { get; private set; } = true;
-	
-	[field: SerializeField]
-	public bool Dead { get; private set; } = false;
+	[HideInInspector] public Action onDeadEvent;
+	[HideInInspector] public Healthbar healthbar;
+	public float maxHealth;
+	public float health;
+	public bool canTakeDamage = true;
+	public bool dead = false;
 
-	[SerializeField]
-	private float iFrameSecs;
-
-	[SerializeField]
-	private GameObject HealthPrefab;
-
-	private float lastHitTime = Mathf.NegativeInfinity;
-
-	public Rigidbody2D rb;
-	public SpriteRenderer rd;
-	public Action OnDeadEvent;
-	public Healthbar Healthbar;
-	public float MaxHealth;
-	public float Health;
-
+	[SerializeField] private float _iFrameSecs;
+	[SerializeField] private GameObject _healthBarPrefab;
+	private Rigidbody2D _rb;
+	private SpriteRenderer _rd;
+	private float _lastHitTime = Mathf.NegativeInfinity;
 
 	private void Awake()
 	{
-		rb = GetComponent<Rigidbody2D>();
+		_rb = GetComponent<Rigidbody2D>();
 
-		Healthbar = Instantiate(HealthPrefab, transform).GetComponent<Healthbar>();
-		Healthbar.gameObject.name = "Healthbar";
+		healthbar = Instantiate(_healthBarPrefab, transform).GetComponent<Healthbar>();
+		healthbar.gameObject.name = "Healthbar";
 
 		Transform renderer = transform.Find("Renderer");
-		rd = renderer.GetComponent<SpriteRenderer>();
-		if (rd == null)
+		_rd = renderer.GetComponent<SpriteRenderer>();
+		if (_rd == null)
 		{
 			Debug.LogError($"{gameObject.name} is without renderer");
 		}
@@ -47,43 +40,43 @@ public class Entity : MonoBehaviour
 
 	private void Update()
 	{
-		if (Dead || iFrameSecs == 0) return;
+		if (dead || _iFrameSecs == 0) return;
 
-		float timeSinceHit = Time.time - lastHitTime;
-		if (timeSinceHit < iFrameSecs)
+		float timeSinceHit = Time.time - _lastHitTime;
+		if (timeSinceHit < _iFrameSecs)
 		{
-			rd.enabled = timeSinceHit % 0.1 < 0.05; // blink effect
-			CanTakeDamage = false;
+			_rd.enabled = timeSinceHit % 0.1 < 0.05; // blink effect
+			canTakeDamage = false;
 		}
 		else
 		{
-			rd.enabled = true;
-			CanTakeDamage = true;
+			_rd.enabled = true;
+			canTakeDamage = true;
 		}
 	}
 
 	public void TakeDamage(float damage)
 	{
-		Health -= damage;
-		if (Health <= 0)
+		health -= damage;
+		if (health <= 0)
 		{
-			CommonDeathFunc();
-			OnDeadEvent?.Invoke();
 			Debug.Log($"{gameObject.name} has died.");
+			CommonDeathFunc();
+			onDeadEvent?.Invoke();
 			return;
 		}
 		
-		lastHitTime = Time.time;
-		Debug.Log($"{gameObject.name} down to {Health} health.");
+		_lastHitTime = Time.time;
+		Debug.Log($"{gameObject.name} down to {health} health.");
 	}
 
 	public void CommonDeathFunc()
 	{
-		Dead = true;
-		Healthbar.Show = false;
-		CanTakeDamage = false;
+		dead = true;
+		healthbar.Show = false;
+		canTakeDamage = false;
 
-		rb.bodyType = RigidbodyType2D.Static;
-		rd.color = new Color(1f, 1f, 1f, 0.075f); // "ghost" effect
+		_rb.bodyType = RigidbodyType2D.Static;
+		_rd.color = new Color(1f, 1f, 1f, 0.1f); // ghost effect
 	}
 }

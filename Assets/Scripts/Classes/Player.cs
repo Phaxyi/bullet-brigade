@@ -3,25 +3,28 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField]
-	private float moveSpeed;
+	// make public for convenience
+	[HideInInspector] public Entity entity;
 
-	private const float rotateSpeed = 200;
-	private Vector2 moveDir = Vector2.zero;
-	public Entity entity;
+	private const float ROTATE_SPEED = 200;
+
+	[SerializeField] private float _moveSpeed = 4f;
+	private Vector2 _moveDir = Vector2.zero;
+	private Rigidbody2D _rb;
 
 	private void Awake()
 	{
+		_rb = GetComponent<Rigidbody2D>();
 		entity = GetComponent<Entity>();
-		entity.OnDeadEvent = OnDead;
+		entity.onDeadEvent = OnDead;
 	}
 
     public void FixedUpdate()
     {
-		if (entity.Dead) return;
-    	entity.rb.linearVelocity = moveDir * moveSpeed;
+		if (entity.dead) return;
+    	_rb.linearVelocity = _moveDir * _moveSpeed;
 
-		if (moveDir != Vector2.zero)
+		if (_moveDir != Vector2.zero)
 		{
 			AdjustRotation();
 		}
@@ -29,15 +32,15 @@ public class Player : MonoBehaviour
 
 	public void OnMove(InputValue inputVal)
 	{
-		moveDir = inputVal.Get<Vector2>();
+		_moveDir = inputVal.Get<Vector2>();
 	}
 
 	private void AdjustRotation()
 	{
-		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, moveDir);
-		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
+		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _moveDir);
+		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, ROTATE_SPEED * Time.fixedDeltaTime);
 
-		entity.rb.SetRotation(rotation);
+		_rb.SetRotation(rotation);
 	}
 
 	private void OnDead()

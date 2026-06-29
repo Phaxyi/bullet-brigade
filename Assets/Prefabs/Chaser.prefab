@@ -203,10 +203,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e50a48b861bafd4f8c594899ca9165a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyAI
-  wanderSpeed: 0.5
-  chaseSpeed: 2.5
-  chaseRange: 5
-  preIdlePause: 0
+  _wanderSpeed: 1
+  _chaseSpeed: 2.5
+  _chaseRange: 4
+  _preIdlePause: 1
 --- !u!114 &1770840163812186063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdabddcf2fa151d4c823586d3ea07ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  <Damage>k__BackingField: 10
+  _damage: 10
 --- !u!114 &7254748767527434722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,11 +232,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8a2811ef0a54f4389ac12ee812afda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
-  <CanTakeDamage>k__BackingField: 1
-  <Dead>k__BackingField: 0
-  iFrameSecs: 0
-  HealthPrefab: {fileID: 8048382222159835460, guid: 391433f4f06a1fc40958a7748ad85e00, type: 3}
-  rb: {fileID: 0}
-  rd: {fileID: 0}
-  Health: {fileID: 0}
-  lastHitTime: -1000
+  healthbar: {fileID: 0}
+  maxHealth: 15
+  health: 15
+  canTakeDamage: 1
+  dead: 0
+  _iFrameSecs: 0
+  _healthBarPrefab: {fileID: 8048382222159835460, guid: 391433f4f06a1fc40958a7748ad85e00, type: 3}

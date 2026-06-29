@@ -10,55 +10,48 @@ using UnityEngine;
 
 public class Chaser : MonoBehaviour
 {
-	[SerializeField]
-	private float wanderSpeed;
-
-	[SerializeField]
-	private float chaseSpeed;
-
-	[SerializeField]
-	private float chaseRange;
-
-	[SerializeField]
-	private float preIdlePause;
-
-	private Rigidbody2D rb;
-	private Entity entity;
-	private Player plr;
-
-	private Vector2 moveDir = Vector2.zero;
-	private float stateChangeTime = Mathf.NegativeInfinity;
-
-	private float perlinX;
-	private float perlinY;
-	private float perlinStep = 0;
-	private Vector2 savedMoveDir;
-
-	private const float rotateSpeed = 200;
+	private const float ROTATE_SPEED = 200;
 	private const float TAU = (float)Math.PI * 2;
-	private Action<Vector2> stateFunc;
+	
+	[SerializeField] private float _wanderSpeed = 1f;
+	[SerializeField] private float _chaseSpeed = 2.5f;
+	[SerializeField] private float _chaseRange = 5f;
+	[SerializeField] private float _preIdlePause = 1f;
+
+	private Rigidbody2D _rb;
+	private Entity _entity;
+	private Player _plr;
+
+	private float _perlinX;
+	private float _perlinY;
+	private float _perlinStep = 0;
+
+	private Vector2 _moveDir = Vector2.zero;
+	private Vector2 _savedMoveDir;
+	private Action<Vector2> _stateFunc;
+	private float _stateChangeTime = Mathf.NegativeInfinity;
 
 	private void Awake()
 	{
-		rb = GetComponent<Rigidbody2D>();
-		entity = GetComponent<Entity>();
-		plr = FindAnyObjectByType<Player>();
+		_rb = GetComponent<Rigidbody2D>();
+		_entity = GetComponent<Entity>();
+		_plr = FindAnyObjectByType<Player>();
 
-		perlinX = UnityEngine.Random.Range(0f, 10000f);
-		perlinY = UnityEngine.Random.Range(0f, 10000f);
+		_perlinX = UnityEngine.Random.Range(0f, 10000f);
+		_perlinY = UnityEngine.Random.Range(0f, 10000f);
 	}
 
 	private void FixedUpdate()
 	{
-		if (entity.Dead || plr.entity.Dead) return;
+		if (_entity.dead || _plr.entity.dead) return;
 
-		Vector2 dirToPlr = plr.transform.position - transform.position;
-		if (dirToPlr.magnitude < chaseRange) ChangeState(Chase);
+		Vector2 dirToPlr = _plr.transform.position - transform.position;
+		if (dirToPlr.magnitude < _chaseRange) ChangeState(Chase);
 		else ChangeState(Idle);
 
-		stateFunc(dirToPlr);
+		_stateFunc(dirToPlr);
 
-		if (moveDir != Vector2.zero)
+		if (_moveDir != Vector2.zero)
 		{
 			AdjustRotation();
 		}
@@ -66,47 +59,47 @@ public class Chaser : MonoBehaviour
 
 	private void ChangeState(Action<Vector2> func)
 	{
-		if (stateFunc == func) return;
+		if (_stateFunc == func) return;
 
-		stateFunc = func;
-		stateChangeTime = Time.time;
-		savedMoveDir = moveDir;
+		_stateFunc = func;
+		_stateChangeTime = Time.time;
+		_savedMoveDir = _moveDir;
 	}
 
 	private void Chase(Vector2 dirToPlr)
 	{
-		moveDir = dirToPlr.normalized;
-		rb.linearVelocity = moveDir * chaseSpeed;
+		_moveDir = dirToPlr.normalized;
+		_rb.linearVelocity = _moveDir * _chaseSpeed;
 	}
 
 	private void Idle(Vector2 _)
 	{
-		moveDir = Vector2.zero;
+		_moveDir = Vector2.zero;
 
 		// short pause before wandering
-		float timeSinceStateChange = Time.time - stateChangeTime;
-		if (timeSinceStateChange < preIdlePause) return;
+		float timeSinceStateChange = Time.time - _stateChangeTime;
+		if (timeSinceStateChange < _preIdlePause) return;
 
 		// use perlin noise to decide movement
 		// lerp savedMoveDir w/ moveDir to prevent rotational jerk upon Idle statechange
-		float speedAdjust = Mathf.Min(timeSinceStateChange - preIdlePause, 5) * 1/5;
-		perlinStep += Time.fixedDeltaTime / 5;
+		float speedAdjust = Mathf.Min(timeSinceStateChange - _preIdlePause, 5) * 1/5;
+		_perlinStep += Time.fixedDeltaTime / 5;
 		
 		float rand = Mathf.Clamp(Mathf.PerlinNoise(
-			perlinX + perlinStep,
-			perlinY - perlinStep
+			_perlinX + _perlinStep,
+			_perlinY - _perlinStep
 		), 0, 1) * TAU;
 
-		moveDir = new Vector2(Mathf.Cos(rand), Mathf.Sin(rand)).normalized;
-		moveDir = Vector2.Lerp(moveDir, savedMoveDir, 1 - speedAdjust);
-		rb.linearVelocity = moveDir * wanderSpeed * speedAdjust;
+		_moveDir = new Vector2(Mathf.Cos(rand), Mathf.Sin(rand)).normalized;
+		_moveDir = Vector2.Lerp(_moveDir, _savedMoveDir, 1 - speedAdjust);
+		_rb.linearVelocity = _moveDir * _wanderSpeed * speedAdjust;
 	}
 
 	private void AdjustRotation()
 	{
-		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, moveDir);
-		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
+		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _moveDir);
+		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, ROTATE_SPEED * Time.fixedDeltaTime);
 
-		rb.SetRotation(rotation);
+		_rb.SetRotation(rotation);
 	}
 }

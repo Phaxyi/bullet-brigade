@@ -8,33 +8,37 @@ public class Healthbar : MonoBehaviour
 {
 	public bool Show = true;
 
-	private SpriteRenderer rd;
-	private Transform parent;
-	private Entity entity;
+	private SpriteRenderer _rd;
+	private Transform _parent;
+	private Entity _entity;
 
-	void Awake()
+	private void Awake()
 	{
-		rd = GetComponent<SpriteRenderer>();
+		_rd = GetComponent<SpriteRenderer>();
 	}
 
-    void Start()
+    private void Start()
     {
-		parent = transform.parent;
-		entity = parent.GetComponent<Entity>();
+		_parent = transform.parent;
+		_entity = _parent.GetComponent<Entity>();
 
 		Utils.SetGlobalScale(transform, Vector3.one * 1.75f);
 	}
 
-    void Update()
-    {
-		rd.enabled = Show;
+	private void FixedUpdate()
+	{
 		if (!Show) return;
 
 		// anchor healthbar above parent
         transform.position = new Vector2(
-			parent.position.x,
-			parent.position.y + parent.lossyScale.y/2 + 0.4f
+			_parent.position.x,
+			_parent.position.y + _parent.lossyScale.y/2 + 0.4f
 		);
-		rd.color = new Color(1, 1, 1, entity.Health / entity.MaxHealth);
+	}
+
+   private void Update()
+    {
+		_rd.enabled = Show;
+		_rd.color = new Color(1, 1, 1, _entity.health / _entity.maxHealth);
     }
 }

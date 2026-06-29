@@ -2,28 +2,22 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-	[field: SerializeField]
-	public float Damage { get; private set; }
-	private Entity entity;
+	[SerializeField] private float _damage;
+	private Entity _entity;
 
 	private void Awake()
 	{
-		entity = GetComponent<Entity>();
-		entity.OnDeadEvent = OnDead;
+		_entity = GetComponent<Entity>();
+		// entity.OnDeadEvent = OnDead;
 	}
 
 	private void OnCollisionStay2D(Collision2D collision)
 	{
-		if (entity.Dead) return;
+		if (_entity.dead) return;
 
 		Player plr = collision.gameObject.GetComponent<Player>();
-		if (plr == null || !plr.entity.CanTakeDamage) return;
+		if (plr == null || !plr.entity.canTakeDamage) return;
 
-		plr.entity.TakeDamage(Damage);
-	}
-
-	private void OnDead()
-	{
-		
+		plr.entity.TakeDamage(_damage);
 	}
 }

@@ -2,14 +2,14 @@ using UnityEngine;
 
 public static class Level
 {
-	private static int Lives = 3;
-	private static int CollectedSafes = 0;
-	private static int TotalSafes = 5;
+	public static int Lives { get; set; } = 3;
+	public static int CollectedSafes { get; set; } = 0;
+	public static int TotalSafes { get; set; } = 5;
 
 	public static void CollectSafe()
 	{
 		CollectedSafes += 1;
-		Debug.Log($"im rich -> {CollectedSafes}");
+		Debug.Log($"collected safe -> {CollectedSafes}");
 		if (CollectedSafes == TotalSafes)
 		{
 			WinLevel();

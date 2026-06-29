@@ -2,38 +2,34 @@ using UnityEngine;
 
 public class Wall : MonoBehaviour
 {
-	[field: SerializeField]
-	public bool Instakill { get; private set; }
-
-	[field: SerializeField]
-	public float Damage { get; private set; }
-
-	private SpriteRenderer rd;
-	private Color origColor;
-	private Color hitColor;
+	[SerializeField] private bool _instakill;
+	[SerializeField] private float _damage;
+	private SpriteRenderer _rd;
+	private Color _origColor;
+	private Color _hitColor;
 
 	private void Awake()
 	{
-		rd = GetComponent<SpriteRenderer>();
-		origColor = rd.color;
-		hitColor = Color.Lerp(origColor, new Color(1f, 0.5f, 0.5f), 0.5f);
+		_rd = GetComponent<SpriteRenderer>();
+		_origColor = _rd.color;
+		_hitColor = Color.Lerp(_origColor, new Color(1f, 0.5f, 0.5f), 0.5f);
 	}
 
 	private void Update()
 	{
 		float delta = Time.deltaTime;
-		rd.color = Color.Lerp(rd.color, origColor, 5 * delta);
+		_rd.color = Color.Lerp(_rd.color, _origColor, 5 * delta);
 	}
 
 	private void OnCollisionStay2D(Collision2D collision)
 	{
 		// functionally useless if no damage to be dealt
-		if (!Instakill && Damage <= 0) return;
+		if (!_instakill && _damage <= 0) return;
 
 		Player plr = collision.gameObject.GetComponent<Player>();
-		if (plr == null || !plr.entity.CanTakeDamage) return;
+		if (plr == null || !plr.entity.canTakeDamage) return;
 
-		plr.entity.TakeDamage(Instakill ? float.PositiveInfinity : Damage);
-		rd.color = hitColor;
+		plr.entity.TakeDamage(_instakill ? float.PositiveInfinity : _damage);
+		_rd.color = _hitColor;
 	}
 }
