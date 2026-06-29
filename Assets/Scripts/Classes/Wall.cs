@@ -16,7 +16,7 @@ public class Wall : MonoBehaviour
 	{
 		rd = GetComponent<SpriteRenderer>();
 		origColor = rd.color;
-		hitColor = Color.Lerp(origColor, new Color(1f, 0.5f, 0.5f), 0.5f); // ?
+		hitColor = Color.Lerp(origColor, new Color(1f, 0.5f, 0.5f), 0.5f);
 	}
 
 	private void Update()

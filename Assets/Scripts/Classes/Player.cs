@@ -42,6 +42,6 @@ public class Player : MonoBehaviour
 
 	private void OnDead()
 	{
-		Debug.Log("im dead fr fr");
+		Debug.Log("im dead (Player.cs)");
 	}
 }

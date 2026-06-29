@@ -6,6 +6,8 @@
 using System;
 using UnityEngine;
 
+// TODO: raycast walls
+
 public class Chaser : MonoBehaviour
 {
 	[SerializeField]

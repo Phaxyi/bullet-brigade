@@ -3,8 +3,6 @@
 	Errors if entity is missing a "Renderer" child.
 */
 
-// TODO: change awake & start properly
-
 using System;
 using UnityEngine;
 
@@ -31,7 +29,7 @@ public class Entity : MonoBehaviour
 	public float MaxHealth;
 	public float Health;
 
-	// functions
+
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
@@ -69,10 +67,7 @@ public class Entity : MonoBehaviour
 		Health -= damage;
 		if (Health <= 0)
 		{
-			Dead = true;
-			Healthbar.Show = false;
-			CanTakeDamage = false;
-			
+			CommonDeathFunc();
 			OnDeadEvent?.Invoke();
 			Debug.Log($"{gameObject.name} has died.");
 			return;
@@ -80,5 +75,15 @@ public class Entity : MonoBehaviour
 		
 		lastHitTime = Time.time;
 		Debug.Log($"{gameObject.name} down to {Health} health.");
+	}
+
+	public void CommonDeathFunc()
+	{
+		Dead = true;
+		Healthbar.Show = false;
+		CanTakeDamage = false;
+
+		rb.bodyType = RigidbodyType2D.Static;
+		rd.color = new Color(1f, 1f, 1f, 0.075f); // "ghost" effect
 	}
 }
