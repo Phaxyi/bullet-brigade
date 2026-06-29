@@ -3,6 +3,11 @@
 	Errors if entity is missing a "Renderer" child.
 */
 
+
+
+// TODO: make this component so Player & Enemy inherit from MonoBehaviour so you can do multiple Awakes()
+
+using System;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -19,15 +24,16 @@ public class Entity : MonoBehaviour
 	[SerializeField]
 	private float iFrameSecs;
 
-	protected Rigidbody2D rb;
-	protected SpriteRenderer rd;
-	private float lastHitTime = -1000;
+	public float lastHitTime = -float.NegativeInfinity;
+	public Rigidbody2D rb;
+	public SpriteRenderer rd;
+	public Action OnDeadEvent;
 
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 
-		var renderer = transform.Find("Renderer");
+		Transform renderer = transform.Find("Renderer");
 		rd = renderer.GetComponent<SpriteRenderer>();
 		if (rd == null)
 		{
@@ -47,6 +53,7 @@ public class Entity : MonoBehaviour
 		}
 		else
 		{
+			rd.enabled = true;
 			CanTakeDamage = true;
 		}
 	}
@@ -58,6 +65,8 @@ public class Entity : MonoBehaviour
 		{
 			Dead = true;
 			CanTakeDamage = false;
+			
+			OnDeadEvent?.Invoke();
 			Debug.Log($"{gameObject.name} has died.");
 			return;
 		}

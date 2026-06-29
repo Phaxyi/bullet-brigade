@@ -34,8 +34,7 @@ public class Chaser : MonoBehaviour
 
 	private const float rotateSpeed = 200;
 	private const float TAU = (float)Math.PI * 2;
-
-	Action<Vector2> stateFunc;
+	private Action<Vector2> stateFunc;
 
 	private void Awake()
 	{
@@ -49,7 +48,7 @@ public class Chaser : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (entity.Dead || plr.Dead) return;
+		if (entity.Dead || plr.entity.Dead) return;
 
 		Vector2 dirToPlr = plr.transform.position - transform.position;
 		if (dirToPlr.magnitude < chaseRange) ChangeState(Chase);

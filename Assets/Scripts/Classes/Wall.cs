@@ -31,9 +31,9 @@ public class Wall : MonoBehaviour
 		if (!Instakill && Damage <= 0) return;
 
 		Player plr = collision.gameObject.GetComponent<Player>();
-		if (plr == null || !plr.CanTakeDamage) return;
+		if (plr == null || !plr.entity.CanTakeDamage) return;
 
-		plr.TakeDamage(Instakill ? float.PositiveInfinity : Damage);
+		plr.entity.TakeDamage(Instakill ? float.PositiveInfinity : Damage);
 		rd.color = hitColor;
 	}
 }
