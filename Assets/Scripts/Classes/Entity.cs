@@ -3,18 +3,13 @@
 	Errors if entity is missing a "Renderer" child.
 */
 
-
-
-// TODO: make this component so Player & Enemy inherit from MonoBehaviour so you can do multiple Awakes()
+// TODO: change awake & start properly
 
 using System;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-	[field: SerializeField]
-	public float Health { get; private set; }
-
 	[field: SerializeField]
 	public bool CanTakeDamage { get; private set; } = true;
 	
@@ -24,14 +19,25 @@ public class Entity : MonoBehaviour
 	[SerializeField]
 	private float iFrameSecs;
 
-	public float lastHitTime = -float.NegativeInfinity;
+	[SerializeField]
+	private GameObject HealthPrefab;
+
+	private float lastHitTime = Mathf.NegativeInfinity;
+
 	public Rigidbody2D rb;
 	public SpriteRenderer rd;
 	public Action OnDeadEvent;
+	public Healthbar Healthbar;
+	public float MaxHealth;
+	public float Health;
 
+	// functions
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
+
+		Healthbar = Instantiate(HealthPrefab, transform).GetComponent<Healthbar>();
+		Healthbar.gameObject.name = "Healthbar";
 
 		Transform renderer = transform.Find("Renderer");
 		rd = renderer.GetComponent<SpriteRenderer>();
@@ -64,6 +70,7 @@ public class Entity : MonoBehaviour
 		if (Health <= 0)
 		{
 			Dead = true;
+			Healthbar.Show = false;
 			CanTakeDamage = false;
 			
 			OnDeadEvent?.Invoke();

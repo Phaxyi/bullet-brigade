@@ -25,7 +25,7 @@ public class Chaser : MonoBehaviour
 	private Player plr;
 
 	private Vector2 moveDir = Vector2.zero;
-	private float stateChangeTime = float.NegativeInfinity;
+	private float stateChangeTime = Mathf.NegativeInfinity;
 
 	private float perlinX;
 	private float perlinY;
