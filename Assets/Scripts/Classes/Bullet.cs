@@ -3,6 +3,7 @@
 	Actually firing it is handled in corresponding Entity script (e.g. Player.cs)
 */
 
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -12,6 +13,9 @@ public class Bullet : MonoBehaviour
 	private float _bouncesLeft;
 
 	private Rigidbody2D _rb;
+	private LayerMask _layerMask;
+	private Vector2 _currentDir;
+	private Vector2 _nextNormal;
 
 	// mimic constructor
 	public void SetupBullet(float speed, float damage, int maxBounces)
@@ -24,18 +28,20 @@ public class Bullet : MonoBehaviour
 	private void Awake()
 	{
 		_rb = GetComponent<Rigidbody2D>();
+		_layerMask = LayerMask.GetMask("Wall");
+
+		_currentDir = transform.up;
+		SetNextNormal();
 	}
 
 	private void FixedUpdate()
 	{
-		_rb.linearVelocity = transform.up * _speed;
+		_rb.linearVelocity = _currentDir * _speed;
 	}
 
-	private void OnCollisionEnter2D(Collision2D collision)
+	private void OnTriggerEnter2D(Collider2D collider)
 	{
-		// TODO: https://stackoverflow.com/questions/77245272/wall-bounce-in-unity#77245345
-		
-		GameObject otherObj = collision.gameObject;
+		GameObject otherObj = collider.gameObject;
 
 		Entity entity = otherObj.GetComponent<Entity>();
 		if (entity)
@@ -54,18 +60,33 @@ public class Bullet : MonoBehaviour
 		Wall wall = otherObj.GetComponent<Wall>();
 		if (wall)
 		{
-			Debug.Log(wall);
        		if (_bouncesLeft == 0)
 			{
 				KillBullet();
 				return;
 			}
 			
-			Vector2 normal = collision.GetContact(0).normal;
-			_rb.linearVelocity = Vector2.Reflect(_rb.linearVelocity, normal);
+			// TODO: research on diffs between rb & transform
+			// use Raycast because you can't get
+			// contacts from OnTrigger & can't ignore collision with OnCollision..?
+			Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _nextNormal);
+			_rb.SetRotation(Quaternion.LookRotation(transform.up, dir)); // TODO: not workin
+			_currentDir = dir;
+			_rb.linearVelocity = dir * _speed;
+			SetNextNormal();
+
 			_bouncesLeft -= 1;
 			return;
 		}
+	}
+
+	private void SetNextNormal()
+	{
+		RaycastHit2D _hit = Physics2D.Raycast(
+			transform.position, transform.TransformDirection(Vector2.up), Mathf.Infinity, _layerMask);
+
+		Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * 100, Color.red, 1);
+		_nextNormal = _hit.normal;
 	}
 
 	private void KillBullet() => Destroy(gameObject);

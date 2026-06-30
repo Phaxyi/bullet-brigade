@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 	// make public for convenience
 	[HideInInspector] public Entity entity;
 
-	[SerializeField] private float _rotateSpeed = 250f;
+	[SerializeField] private float _rotateSpeed = 275f;
 	[SerializeField] private float _moveSpeed = 4f;
 	private Vector2 _moveDir = Vector2.zero;
 	private Rigidbody2D _rb;
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
 
 	private void AdjustRotation()
 	{
-		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _moveDir);
+		Quaternion targetRotation = Quaternion.LookRotation(transform.up, _moveDir);
 		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotateSpeed * Time.fixedDeltaTime);
 
 		_rb.SetRotation(rotation);

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3508321821076957338}
   - component: {fileID: 8358211466684787734}
   - component: {fileID: 3050309628348939138}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,5 +151,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61999c34f54e6fc4d82ce64f066df267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wall
-  <Instakill>k__BackingField: 0
-  <Damage>k__BackingField: 0
+  _instakill: 0
+  _damage: 0

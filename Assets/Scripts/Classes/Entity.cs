@@ -77,6 +77,6 @@ public class Entity : MonoBehaviour
 		canTakeDamage = false;
 
 		_rb.bodyType = RigidbodyType2D.Static;
-		_rd.color = new Color(1f, 1f, 1f, 0.1f); // ghost effect
+		_rd.color = new Color(1f, 1f, 1f, 0.075f); // ghost effect
 	}
 }
