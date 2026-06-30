@@ -1,23 +1,26 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+namespace BulletBrigade
 {
-	[SerializeField] private float _damage;
-	private Entity _entity;
-
-	private void Awake()
+	public class Enemy : MonoBehaviour
 	{
-		_entity = GetComponent<Entity>();
-		// _entity.onDied += OnDied;
-	}
+		[SerializeField] private float _damage;
+		private Entity _entity;
 
-	private void OnCollisionStay2D(Collision2D collision)
-	{
-		if (_entity.dead) return;
+		private void Awake()
+		{
+			_entity = GetComponent<Entity>();
+			// _entity.onDied += OnDied;
+		}
 
-		Player plr = collision.gameObject.GetComponent<Player>();
-		if (plr == null || !plr.entity.canTakeDamage) return;
+		private void OnCollisionStay2D(Collision2D collision)
+		{
+			if (_entity.dead) return;
 
-		plr.entity.TakeDamage(_damage);
+			Player plr = collision.gameObject.GetComponent<Player>();
+			if (plr == null || !plr.entity.canTakeDamage) return;
+
+			plr.entity.TakeDamage(_damage);
+		}
 	}
 }

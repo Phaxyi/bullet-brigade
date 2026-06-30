@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4471877757655803322}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.16219, y: 1.06004, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -164,8 +164,8 @@ MonoBehaviour:
   health: 100
   canTakeDamage: 1
   dead: 0
-  _iFrameSecs: 0.4
   _healthBarPrefab: {fileID: 8048382222159835460, guid: 391433f4f06a1fc40958a7748ad85e00, type: 3}
+  _iFrameSecs: 0.4
 --- !u!114 &3142340835957154240
 MonoBehaviour:
   m_ObjectHideFlags: 0

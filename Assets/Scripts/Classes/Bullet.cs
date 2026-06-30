@@ -5,86 +5,89 @@
 
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+namespace BulletBrigade
 {
-	private float _speed;
-	private float _damage;
-	private float _bouncesLeft;
-
-	private Rigidbody2D _rb;
-	private LayerMask _layerMask;
-	private Vector2 _currentDir;
-	private Vector2 _nextNormal;
-
-	// mimic constructor
-	public void SetupBullet(float speed, float damage, int maxBounces)
+	public class Bullet : MonoBehaviour
 	{
-		_speed = speed;
-		_damage = damage;
-		_bouncesLeft = maxBounces;
-	}
+		private float _speed;
+		private float _damage;
+		private float _bouncesLeft;
 
-	private void Awake()
-	{
-		_rb = GetComponent<Rigidbody2D>();
-		_layerMask = LayerMask.GetMask("Wall");
+		private Rigidbody2D _rb;
+		private LayerMask _layerMask;
+		private Vector2 _currentDir;
+		private Vector2 _nextNormal;
 
-		_currentDir = transform.up;
-		SetNextNormal();
-	}
-
-	private void FixedUpdate()
-	{
-		_rb.linearVelocity = _currentDir * _speed;
-	}
-
-	private void OnTriggerEnter2D(Collider2D collider)
-	{
-		GameObject otherObj = collider.gameObject;
-
-		Entity entity = otherObj.GetComponent<Entity>();
-		if (entity)
+		// mimic constructor
+		public void SetupBullet(float speed, float damage, int maxBounces)
 		{
-			if (otherObj.CompareTag("Player"))
-			{
-				// TODO: shoot bullet at yourself for something to happen(?) (damage?)
-				return;
-			}
-
-			entity.TakeDamage(_damage);
-			KillBullet();
-			return;
+			_speed = speed;
+			_damage = damage;
+			_bouncesLeft = maxBounces;
 		}
 
-		Wall wall = otherObj.GetComponent<Wall>();
-		if (wall)
+		private void Awake()
 		{
-       		if (_bouncesLeft == 0)
+			_rb = GetComponent<Rigidbody2D>();
+			_layerMask = LayerMask.GetMask("Wall");
+
+			_currentDir = transform.up;
+			SetNextNormal();
+		}
+
+		private void FixedUpdate()
+		{
+			_rb.linearVelocity = _currentDir * _speed;
+		}
+
+		private void OnTriggerEnter2D(Collider2D collider)
+		{
+			GameObject otherObj = collider.gameObject;
+
+			Entity entity = otherObj.GetComponent<Entity>();
+			if (entity)
 			{
+				if (otherObj.CompareTag("Player"))
+				{
+					// TODO: shoot bullet at yourself for something to happen(?) (damage?)
+					return;
+				}
+
+				entity.TakeDamage(_damage);
 				KillBullet();
 				return;
 			}
-			
-			// TODO: research on diffs between rb & transform
-			// use Raycast because you can't get contacts
-			// from OnTrigger & can't ignore collision with OnCollision..?
-			Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _nextNormal);
-			SetNextNormal();
 
-			_rb.SetRotation(Quaternion.LookRotation(transform.forward, dir));
-			_currentDir = dir;
+			Wall wall = otherObj.GetComponent<Wall>();
+			if (wall)
+			{
+				if (_bouncesLeft == 0)
+				{
+					KillBullet();
+					return;
+				}
+				
+				// TODO: research on diffs between rb & transform
+				// use Raycast because you can't get contacts
+				// from OnTrigger & can't ignore collision with OnCollision..?
+				Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _nextNormal);
+				SetNextNormal();
 
-			_bouncesLeft -= 1;
-			return;
+				_rb.SetRotation(Quaternion.LookRotation(transform.forward, dir));
+				_currentDir = dir;
+
+				_bouncesLeft -= 1;
+				return;
+			}
 		}
-	}
 
-	private void SetNextNormal()
-	{
-		RaycastHit2D _hit = Physics2D.Raycast(
-			transform.position, transform.TransformDirection(Vector2.up), Mathf.Infinity, _layerMask);
-		_nextNormal = _hit.normal;
-	}
+		private void SetNextNormal()
+		{
+			RaycastHit2D _hit = Physics2D.Raycast(
+				transform.position, transform.TransformDirection(Vector2.up), Mathf.Infinity, _layerMask);
+			_nextNormal = _hit.normal;
+		}
 
-	private void KillBullet() => Destroy(gameObject);
+		private void KillBullet() => Destroy(gameObject);
+	}	
 }

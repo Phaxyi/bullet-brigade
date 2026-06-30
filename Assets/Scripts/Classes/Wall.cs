@@ -1,35 +1,37 @@
 using UnityEngine;
 
-public class Wall : MonoBehaviour
-{
-	[SerializeField] private bool _instakill;
-	[SerializeField] private float _damage;
-	private SpriteRenderer _rd;
-	private Color _origColor;
-	private Color _hitColor;
-
-	private void Awake()
+namespace BulletBrigade {
+	public class Wall : MonoBehaviour
 	{
-		_rd = GetComponent<SpriteRenderer>();
-		_origColor = _rd.color;
-		_hitColor = Color.Lerp(_origColor, new Color(1f, 0.5f, 0.5f), 0.5f);
-	}
+		[SerializeField] private bool _instakill;
+		[SerializeField] private float _damage;
+		private SpriteRenderer _rd;
+		private Color _origColor;
+		private Color _hitColor;
 
-	private void Update()
-	{
-		float delta = Time.deltaTime;
-		_rd.color = Color.Lerp(_rd.color, _origColor, 5 * delta);
-	}
+		private void Awake()
+		{
+			_rd = GetComponent<SpriteRenderer>();
+			_origColor = _rd.color;
+			_hitColor = Color.Lerp(_origColor, new Color(1f, 0.5f, 0.5f), 0.5f);
+		}
 
-	private void OnCollisionStay2D(Collision2D collision)
-	{
-		// functionally useless if no damage to be dealt
-		if (!_instakill && _damage <= 0) return;
+		private void Update()
+		{
+			float delta = Time.deltaTime;
+			_rd.color = Color.Lerp(_rd.color, _origColor, 5 * delta);
+		}
 
-		Player plr = collision.gameObject.GetComponent<Player>();
-		if (plr == null || !plr.entity.canTakeDamage) return;
+		private void OnCollisionStay2D(Collision2D collision)
+		{
+			// functionally useless if no damage to be dealt
+			if (!_instakill && _damage <= 0) return;
 
-		plr.entity.TakeDamage(_instakill ? float.PositiveInfinity : _damage);
-		_rd.color = _hitColor;
+			Player plr = collision.gameObject.GetComponent<Player>();
+			if (plr == null || !plr.entity.canTakeDamage) return;
+
+			plr.entity.TakeDamage(_instakill ? float.PositiveInfinity : _damage);
+			_rd.color = _hitColor;
+		}
 	}
 }
