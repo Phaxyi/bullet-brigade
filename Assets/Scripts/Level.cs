@@ -2,6 +2,8 @@ using UnityEngine;
 
 public static class Level
 {
+	// public static Action ...
+
 	public static int Lives { get; set; } = 3;
 	public static int CollectedSafes { get; set; } = 0;
 	public static int TotalSafes { get; set; } = 5;

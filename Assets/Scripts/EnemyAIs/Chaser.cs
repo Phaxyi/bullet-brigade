@@ -14,7 +14,7 @@ public class Chaser : MonoBehaviour
 	
 	[SerializeField] private float _rotateSpeed = 200f;
 	[SerializeField] private float _wanderSpeed = 1f;
-	[SerializeField] private float _chaseSpeed = 2.5f;
+	[SerializeField] private float _chaseSpeed = 2f;
 	[SerializeField] private float _chaseRange = 5f;
 	[SerializeField] private float _preIdlePause = 1f;
 

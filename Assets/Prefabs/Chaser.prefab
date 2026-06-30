@@ -202,11 +202,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e50a48b861bafd4f8c594899ca9165a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyAI
+  m_EditorClassIdentifier: Assembly-CSharp::Chaser
   _rotateSpeed: 200
   _wanderSpeed: 1
-  _chaseSpeed: 2.5
-  _chaseRange: 4
+  _chaseSpeed: 2
+  _chaseRange: 5
   _preIdlePause: 1
 --- !u!114 &1770840163812186063
 MonoBehaviour:
@@ -238,5 +238,5 @@ MonoBehaviour:
   health: 15
   canTakeDamage: 1
   dead: 0
-  _iFrameSecs: 0
   _healthBarPrefab: {fileID: 8048382222159835460, guid: 391433f4f06a1fc40958a7748ad85e00, type: 3}
+  _iFrameSecs: 0

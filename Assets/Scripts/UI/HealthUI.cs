@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,7 @@ public class HealthbarUI : MonoBehaviour
 {
 	private Entity _plrEntity;
 	private Image _barImage;
+	private TMP_Text _barText;
 
 	private const float LERP_TIME = 0.6f;
 	private float targetFill;
@@ -13,7 +15,9 @@ public class HealthbarUI : MonoBehaviour
 	private void Awake()
 	{
 		_plrEntity = GameObject.FindWithTag("Player").GetComponent<Entity>();
+
 		_barImage = transform.Find("Bar").GetComponent<Image>();
+		_barText = transform.Find("Value").GetComponent<TMP_Text>();
 	}
 
 	private void Update()
@@ -23,6 +27,8 @@ public class HealthbarUI : MonoBehaviour
 		{
 			targetFill = Mathf.Clamp(newTargetFill, 0, 1);
 			lerpStart = Time.time;
+
+			_barText.text = _plrEntity.health.ToString();
 		}
 		
 		float t = (Time.time - lerpStart) / LERP_TIME;
