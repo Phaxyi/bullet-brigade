@@ -10,9 +10,9 @@ using UnityEngine;
 
 public class Chaser : MonoBehaviour
 {
-	private const float ROTATE_SPEED = 200;
 	private const float TAU = (float)Math.PI * 2;
 	
+	[SerializeField] private float _rotateSpeed = 200f;
 	[SerializeField] private float _wanderSpeed = 1f;
 	[SerializeField] private float _chaseSpeed = 2.5f;
 	[SerializeField] private float _chaseRange = 5f;
@@ -98,7 +98,7 @@ public class Chaser : MonoBehaviour
 	private void AdjustRotation()
 	{
 		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _moveDir);
-		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, ROTATE_SPEED * Time.fixedDeltaTime);
+		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotateSpeed * Time.fixedDeltaTime);
 
 		_rb.SetRotation(rotation);
 	}

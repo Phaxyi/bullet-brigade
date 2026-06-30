@@ -3,15 +3,14 @@ using UnityEngine;
 public static class Utils
 {
 	// https://discussions.unity.com/t/143857
-	public static void SetGlobalScale(this Transform transform, Vector3 globalScale)
+	public static void SetGlobalScale(this Transform transform, Vector2 globalScale)
 	{
 		var lossy = transform.lossyScale;
 
-		transform.localScale = Vector3.one;
-		transform.localScale = new Vector3 (
+		transform.localScale = Vector2.one;
+		transform.localScale = new Vector2 (
 			globalScale.x / lossy.x,
-			globalScale.y / lossy.y,
-			globalScale.z / lossy.z
+			globalScale.y / lossy.y
 		);
 	}
 }

@@ -406,6 +406,37 @@ Transform:
   - {fileID: 6088362636845948874}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1505157007
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1505157008}
+  m_Layer: 0
+  m_Name: Bullets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1505157008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505157007}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.01263, y: 0.2741, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1514367607
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -995,6 +1026,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
+      propertyPath: _bulletSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 5897509784078350670, guid: f22c4d273ca782f4bb3a431dc3f982c7, type: 3}
+    - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
+      propertyPath: _magazineSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
+      propertyPath: _shootCooldown
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
+      propertyPath: _reloadCooldown
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4471877757655803322, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1015,3 +1066,4 @@ SceneRoots:
   - {fileID: 1074341368}
   - {fileID: 1769606170}
   - {fileID: 1112401625}
+  - {fileID: 1505157008}

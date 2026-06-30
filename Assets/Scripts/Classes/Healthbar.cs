@@ -22,7 +22,7 @@ public class Healthbar : MonoBehaviour
 		_parent = transform.parent;
 		_entity = _parent.GetComponent<Entity>();
 
-		Utils.SetGlobalScale(transform, Vector3.one * 1.75f);
+		Utils.SetGlobalScale(transform, Vector2.one * 1.75f);
 	}
 
 	private void FixedUpdate()

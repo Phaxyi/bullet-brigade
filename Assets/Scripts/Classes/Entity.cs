@@ -70,7 +70,7 @@ public class Entity : MonoBehaviour
 		Debug.Log($"{gameObject.name} down to {health} health.");
 	}
 
-	public void CommonDeathFunc()
+	private void CommonDeathFunc()
 	{
 		dead = true;
 		healthbar.Show = false;
