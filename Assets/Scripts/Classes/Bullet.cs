@@ -67,13 +67,13 @@ public class Bullet : MonoBehaviour
 			}
 			
 			// TODO: research on diffs between rb & transform
-			// use Raycast because you can't get
-			// contacts from OnTrigger & can't ignore collision with OnCollision..?
+			// use Raycast because you can't get contacts
+			// from OnTrigger & can't ignore collision with OnCollision..?
 			Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _nextNormal);
-			_rb.SetRotation(Quaternion.LookRotation(transform.up, dir)); // TODO: not workin
-			_currentDir = dir;
-			_rb.linearVelocity = dir * _speed;
 			SetNextNormal();
+			
+			_rb.SetRotation(Quaternion.LookRotation(transform.forward, dir));
+			_currentDir = dir;
 
 			_bouncesLeft -= 1;
 			return;

@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
 
 	private void AdjustRotation()
 	{
-		Quaternion targetRotation = Quaternion.LookRotation(transform.up, _moveDir);
+		Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _moveDir);
 		Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotateSpeed * Time.fixedDeltaTime);
 
 		_rb.SetRotation(rotation);
