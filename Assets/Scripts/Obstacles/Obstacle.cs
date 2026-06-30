@@ -1,4 +1,7 @@
-using Unity.VisualScripting;
+/*
+	Superclass for all obstacles, provides damage logic.
+*/
+
 using UnityEngine;
 
 namespace BulletBrigade {
