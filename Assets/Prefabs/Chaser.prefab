@@ -140,7 +140,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10000
+  m_Mass: 1
   m_LinearDamping: 10
   m_AngularDamping: 10
   m_GravityScale: 0
@@ -236,7 +236,8 @@ MonoBehaviour:
   healthbar: {fileID: 0}
   maxHealth: 15
   health: 15
-  canTakeDamage: 1
+  usingSafeZone: 0
+  invincible: 0
   dead: 0
   _healthBarPrefab: {fileID: 8048382222159835460, guid: 391433f4f06a1fc40958a7748ad85e00, type: 3}
   _iFrameSecs: 0

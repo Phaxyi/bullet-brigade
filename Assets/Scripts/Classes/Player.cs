@@ -51,6 +51,10 @@ namespace BulletBrigade {
 			_moveDir = inputVal.Get<Vector2>();
 		}
 
-		private void OnFire(InputValue inputVal) => _gun.Fire();
+		private void OnFire(InputValue inputVal)
+		{
+			if (entity.dead || entity.invincible) return;
+			_gun.Fire();
+		}
 	}
 }

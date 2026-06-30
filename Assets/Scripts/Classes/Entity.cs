@@ -15,19 +15,22 @@ namespace BulletBrigade
 		[HideInInspector] public Healthbar healthbar;
 		public float maxHealth;
 		public float health;
-		public bool canTakeDamage = true;
+		public bool usingSafeZone = false;
+		public bool invincible = false; // true if in safezone
 		public bool dead = false;
 
 		[SerializeField] private GameObject _healthBarPrefab;
 		[SerializeField] private float _iFrameSecs;
 		private Rigidbody2D _rb;
 		private SpriteRenderer _rd;
+		private CircleCollider2D _coll2d;
 		private float _lastHitTime = Mathf.NegativeInfinity;
 
 		private void Awake()
 		{
 			_rb = GetComponent<Rigidbody2D>();
 			_rd = transform.Find("Renderer").GetComponent<SpriteRenderer>();
+			_coll2d = GetComponent<CircleCollider2D>();
 
 			healthbar = Instantiate(_healthBarPrefab, transform).GetComponent<Healthbar>();
 			healthbar.gameObject.name = "Healthbar";
@@ -43,18 +46,18 @@ namespace BulletBrigade
 			if (timeSinceHit < _iFrameSecs)
 			{
 				_rd.enabled = timeSinceHit % 0.1 < 0.05; // blink effect
-				canTakeDamage = false;
+				invincible = true;
 			}
 			else
 			{
 				_rd.enabled = true;
-				canTakeDamage = true;
+				invincible = usingSafeZone ? true : false;
 			}
 		}
 
 		public void TakeDamage(float damage)
 		{
-			health -= damage;
+			health = Mathf.Clamp(health - damage, 0, maxHealth);
 			if (health <= 0)
 			{
 				Debug.Log($"{gameObject.name} has died.");
@@ -70,8 +73,8 @@ namespace BulletBrigade
 		{
 			dead = true;
 			healthbar.Show = false;
-			canTakeDamage = false;
 
+			_coll2d.enabled = false;
 			_rb.bodyType = RigidbodyType2D.Static;
 			_rd.color = new Color(1f, 1f, 1f, 0.075f); // ghost effect
 		}

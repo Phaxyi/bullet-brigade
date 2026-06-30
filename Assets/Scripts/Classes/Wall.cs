@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BulletBrigade {
@@ -28,9 +29,10 @@ namespace BulletBrigade {
 			if (!_instakill && _damage <= 0) return;
 
 			Player plr = collision.gameObject.GetComponent<Player>();
-			if (plr == null || !plr.entity.canTakeDamage) return;
+			Entity entity = plr ? plr.entity : null;
+			if (plr == null || entity.dead || entity.invincible) return;
 
-			plr.entity.TakeDamage(_instakill ? float.PositiveInfinity : _damage);
+			entity.TakeDamage(_instakill ? float.PositiveInfinity : _damage);
 			_rd.color = _hitColor;
 		}
 	}

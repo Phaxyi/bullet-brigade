@@ -18,9 +18,10 @@ namespace BulletBrigade
 			if (_entity.dead) return;
 
 			Player plr = collision.gameObject.GetComponent<Player>();
-			if (plr == null || !plr.entity.canTakeDamage) return;
+			Entity entity = plr ? plr.entity : null;
+			if (plr == null || entity.dead || entity.invincible) return;
 
-			plr.entity.TakeDamage(_damage);
+			entity.TakeDamage(_damage);
 		}
 	}
 }

@@ -34,6 +34,7 @@ namespace BulletBrigade {
 			
 			float t = (Time.time - lerpStart) / LERP_TIME;
 			_barImage.fillAmount = Mathf.SmoothStep(_barImage.fillAmount, targetFill, t);
+			_barImage.color = _plrEntity.usingSafeZone ? Color.softGreen : Color.red;
 		}
 	}
 }
