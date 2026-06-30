@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
 	private void Awake()
 	{
 		_entity = GetComponent<Entity>();
-		// entity.OnDeadEvent = OnDead;
+		// _entity.onDied += OnDied;
 	}
 
 	private void OnCollisionStay2D(Collision2D collision)

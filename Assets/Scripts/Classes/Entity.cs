@@ -6,19 +6,18 @@
 using System;
 using UnityEngine;
 
-// TODO: proper variable naming + underscore
-
 public class Entity : MonoBehaviour
 {
-	[HideInInspector] public Action onDeadEvent;
+	public Action onDied;
+
 	[HideInInspector] public Healthbar healthbar;
 	public float maxHealth;
 	public float health;
 	public bool canTakeDamage = true;
 	public bool dead = false;
 
-	[SerializeField] private float _iFrameSecs;
 	[SerializeField] private GameObject _healthBarPrefab;
+	[SerializeField] private float _iFrameSecs;
 	private Rigidbody2D _rb;
 	private SpriteRenderer _rd;
 	private float _lastHitTime = Mathf.NegativeInfinity;
@@ -26,16 +25,12 @@ public class Entity : MonoBehaviour
 	private void Awake()
 	{
 		_rb = GetComponent<Rigidbody2D>();
+		_rd = transform.Find("Renderer").GetComponent<SpriteRenderer>();
 
 		healthbar = Instantiate(_healthBarPrefab, transform).GetComponent<Healthbar>();
 		healthbar.gameObject.name = "Healthbar";
 
-		Transform renderer = transform.Find("Renderer");
-		_rd = renderer.GetComponent<SpriteRenderer>();
-		if (_rd == null)
-		{
-			Debug.LogError($"{gameObject.name} is without renderer");
-		}
+		onDied += CommonDeathFunc;
 	}
 
 	private void Update()
@@ -61,8 +56,7 @@ public class Entity : MonoBehaviour
 		if (health <= 0)
 		{
 			Debug.Log($"{gameObject.name} has died.");
-			CommonDeathFunc();
-			onDeadEvent?.Invoke();
+			onDied.Invoke();
 			return;
 		}
 		

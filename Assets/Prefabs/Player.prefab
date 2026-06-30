@@ -179,10 +179,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gun
   _bulletPrefab: {fileID: 5897509784078350670, guid: f22c4d273ca782f4bb3a431dc3f982c7, type: 3}
-  _magazineSize: 8
-  _bulletSpeed: 6
+  _bulletSpeed: 8
+  _bulletDamage: 10
   _reloadCooldown: 1
   _shootCooldown: 0.15
+  _magazineSize: 8
+  _maxBounces: 1
 --- !u!1 &7064981847852680854
 GameObject:
   m_ObjectHideFlags: 0

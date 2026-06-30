@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e50a48b861bafd4f8c594899ca9165a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyAI
+  _rotateSpeed: 200
   _wanderSpeed: 1
   _chaseSpeed: 2.5
   _chaseRange: 4

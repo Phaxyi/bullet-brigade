@@ -3,7 +3,6 @@
 	Actually firing it is handled in corresponding Entity script (e.g. Player.cs)
 */
 
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -48,7 +47,7 @@ public class Bullet : MonoBehaviour
 		{
 			if (otherObj.CompareTag("Player"))
 			{
-				// TODO: shoot bullet at yourself to power up?
+				// TODO: shoot bullet at yourself for something to happen(?) (damage?)
 				return;
 			}
 
@@ -71,7 +70,7 @@ public class Bullet : MonoBehaviour
 			// from OnTrigger & can't ignore collision with OnCollision..?
 			Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _nextNormal);
 			SetNextNormal();
-			
+
 			_rb.SetRotation(Quaternion.LookRotation(transform.forward, dir));
 			_currentDir = dir;
 
@@ -84,8 +83,6 @@ public class Bullet : MonoBehaviour
 	{
 		RaycastHit2D _hit = Physics2D.Raycast(
 			transform.position, transform.TransformDirection(Vector2.up), Mathf.Infinity, _layerMask);
-
-		Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * 100, Color.red, 1);
 		_nextNormal = _hit.normal;
 	}
 

@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-	// make public for convenience
 	[HideInInspector] public Entity entity;
 
 	[SerializeField] private float _rotateSpeed = 275f;
@@ -14,14 +13,14 @@ public class Player : MonoBehaviour
 
 	private void Awake()
 	{
+		entity = GetComponent<Entity>();
 		_rb = GetComponent<Rigidbody2D>();
 		_gun = GetComponent<Gun>();
 
-		entity = GetComponent<Entity>();
-		entity.onDeadEvent = OnDead;
+		entity.onDied += OnDied;
 	}
 
-    public void FixedUpdate()
+	private void FixedUpdate()
     {
 		if (entity.dead) return;
     	_rb.linearVelocity = _moveDir * _moveSpeed;
@@ -40,7 +39,7 @@ public class Player : MonoBehaviour
 		_rb.SetRotation(rotation);
 	}
 
-	private void OnDead()
+	private void OnDied()
 	{
 		Debug.Log("im dead (Player.cs)");
 	}

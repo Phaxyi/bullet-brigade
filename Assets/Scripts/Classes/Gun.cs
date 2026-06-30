@@ -9,7 +9,7 @@ public class Gun : MonoBehaviour
 {
 	[SerializeField] private GameObject _bulletPrefab;
 
-	[SerializeField] private float _bulletSpeed = 6;
+	[SerializeField] private float _bulletSpeed = 8;
 	[SerializeField] private float _bulletDamage = 10; 
 	[SerializeField] private float _reloadCooldown = 1;
 	[SerializeField] private float _shootCooldown = 0.15f;
@@ -19,7 +19,7 @@ public class Gun : MonoBehaviour
 	private Transform _bulletsHolder;
 	private Transform _offsetObj;
 
-	public void Awake()
+	private void Awake()
 	{
 		_bulletsHolder = GameObject.Find("Bullets").transform;
 		_offsetObj = transform.Find("BulletOffset");
