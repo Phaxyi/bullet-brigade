@@ -1,8 +1,10 @@
-using System.Drawing;
 using TMPro;
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Visualises gun ammo, reloading etc.
+	/// </summary>
 	public class GunUI : MonoBehaviour
 	{
 		private Gun _gun;

@@ -1,14 +1,13 @@
-/*
-	Moves toward player constantly, slower than the player, when within range.
-	Wanders around randomly when outside range.
-	Avoids walls in front of it.
-*/
-
 using System;
 using UnityEngine;
 
 namespace BulletBrigade
 {
+	/// <summary>
+	/// Basic "Chaser" enemy that moves toward player constantly, when within range.
+	/// Wanders randomly when outside range (idle)
+	/// Avoids walls in front of it.
+	/// </summary>
 	public class Chaser : MonoBehaviour
 	{
 		private const float TAU = (float)Math.PI * 2;

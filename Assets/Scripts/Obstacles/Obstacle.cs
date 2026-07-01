@@ -1,13 +1,12 @@
-/*
-	Superclass for all obstacles, provides damage logic.
-*/
-
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Superclass for all obstacles aka. Walls, provides basic damage logic.
+	/// </summary>
 	public class Obstacle : MonoBehaviour
 	{
-		// used in WallPath.cs
+		// used in WallPath
 		public float phase = 0; 
 
 		[SerializeField] private bool _instakill;

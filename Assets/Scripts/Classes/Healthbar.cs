@@ -1,10 +1,9 @@
-/*
-	Visualises health of Entity.
-*/
-
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Discreet visualisation of Entity health, placed above it.
+	/// </summary>
 	public class Healthbar : MonoBehaviour
 	{
 		public bool Show = true;

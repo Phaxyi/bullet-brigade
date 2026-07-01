@@ -1,6 +1,9 @@
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Various utility functions used in scripts.
+	/// </summary>
 	public static class Utils
 	{
 		// https://discussions.unity.com/t/143857

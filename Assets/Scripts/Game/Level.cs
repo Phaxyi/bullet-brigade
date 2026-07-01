@@ -1,6 +1,9 @@
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// State holder for level with helper functions.
+	/// </summary>
 	public static class Level
 	{
 		// public static Action ...

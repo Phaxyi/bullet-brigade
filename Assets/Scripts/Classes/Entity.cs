@@ -1,13 +1,12 @@
-/*
-	Superclass of all entities (player, enemy etc.)
-	Errors if entity is missing a "Renderer" child.
-*/
-
 using System;
 using UnityEngine;
 
 namespace BulletBrigade
 {
+	/// <summary>
+	/// Superclass of all entities (player, enemy etc.)
+	/// All entities require a "Renderer" child to function.
+	/// </summary>
 	public class Entity : MonoBehaviour
 	{
 		public Action onDied;

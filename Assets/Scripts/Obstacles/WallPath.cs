@@ -1,13 +1,12 @@
-/*
-	Moves between >= 2 points, optionally easing between each point.
-	Parent gameObject should not move, only its positions & Walls
-*/
-
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Moves between >= 2 points, optionally easing between each point.
+	/// Its parent gameObject should not move, only its positions and Walls.
+	/// </summary>
 	public class WallPath : MonoBehaviour
 	{
 		[SerializeField] private float _pathDuration = 1; 	// time taken for total path to revist same point
@@ -139,8 +138,7 @@ namespace BulletBrigade {
 			return convert;
 		}
 
-		// https://easings.net/#easeInOutSine
 		private float EaseIOSine(float t)
-			=> -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
+			=> -(Mathf.Cos(Mathf.PI * t) - 1) / 2; // https://easings.net/#easeInOutSine
 	}
 }

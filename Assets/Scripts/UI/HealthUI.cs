@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Visualises player health.
+	/// </summary>
 	public class HealthbarUI : MonoBehaviour
 	{
 		private Entity _plrEntity;

@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Handles player-centric logic and movement.
+	/// </summary>
 	public class Player : MonoBehaviour
 	{
 		[HideInInspector] public Entity entity;

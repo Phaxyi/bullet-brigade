@@ -1,13 +1,11 @@
-/*
-	Handles gun functionality
-	Actually firing it is handled in corresponding Entity script (e.g. Player.cs)
-	Damages *all* entities, player or enemy
-*/
-
 using UnityEngine;
 
 namespace BulletBrigade
 {
+	/// <summary>
+	/// Handles bullets shot by Gun.
+	/// Bullets damage *all* entities, player or enemy alike.
+	/// </summary>
 	public class Bullet : MonoBehaviour
 	{
 		private float _speed;

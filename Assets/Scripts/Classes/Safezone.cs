@@ -1,6 +1,9 @@
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Safe zone to make players invincible. Enemy AIs avoid walking into it (ideally).
+	/// </summary>
 	public class Safezone : MonoBehaviour
 	{
 		private void Awake()

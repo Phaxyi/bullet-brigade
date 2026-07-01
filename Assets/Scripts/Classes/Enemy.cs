@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace BulletBrigade
 {
+	/// <summary>
+	/// Enemy superclass handing common functions.
+	/// </summary>
 	public class Enemy : MonoBehaviour
 	{
 		[SerializeField] private float _damage;

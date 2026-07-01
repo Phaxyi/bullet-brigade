@@ -1,11 +1,10 @@
-/*
-	Handles gun functionality
-	Actually firing it is handled in corresponding Entity script (e.g. Player.cs)
-*/
-
 using UnityEngine;
 
 namespace BulletBrigade {
+	/// <summary>
+	/// Handles gun functionality.
+	/// Actual firing is done in corresponding Entity (e.g. Player). Enemies can wield guns too.
+	/// </summary>
 	public class Gun : MonoBehaviour
 	{
 		// accessed by UI
