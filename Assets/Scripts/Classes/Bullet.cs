@@ -17,7 +17,7 @@ namespace BulletBrigade
 		private Rigidbody2D _rb;
 		private LayerMask _layerMask;
 		private Vector2 _currentDir;
-		private Vector2 _nextNormal;
+		private Vector2 _rayNormal;
 
 		// mimic constructor
 		public void SetupBullet(float speed, float damage, int maxBounces)
@@ -33,12 +33,12 @@ namespace BulletBrigade
 			_layerMask = LayerMask.GetMask("Wall");
 
 			_currentDir = transform.up;
-			SetNextNormal();
 		}
 
 		private void FixedUpdate()
 		{
 			_rb.linearVelocity = _currentDir * _speed;
+			UpdateRayNormal();
 		}
 
 		private void OnTriggerEnter2D(Collider2D collider)
@@ -63,12 +63,9 @@ namespace BulletBrigade
 					return;
 				}
 				
-				// TODO: research on diffs between rb & transform
 				// use Raycast because you can't get contacts
 				// from OnTrigger & can't ignore collision with OnCollision..?
-				Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _nextNormal);
-				SetNextNormal();
-
+				Vector2 dir = Vector2.Reflect(_rb.linearVelocity.normalized, _rayNormal);
 				_rb.SetRotation(Quaternion.LookRotation(transform.forward, dir));
 				_currentDir = dir;
 
@@ -77,11 +74,15 @@ namespace BulletBrigade
 			}
 		}
 
-		private void SetNextNormal()
+		private void UpdateRayNormal()
 		{
 			RaycastHit2D _hit = Physics2D.Raycast(
-				transform.position, transform.TransformDirection(Vector2.up), Mathf.Infinity, _layerMask);
-			_nextNormal = _hit.normal;
+				transform.position - (transform.up * transform.lossyScale.y),
+				transform.TransformDirection(Vector2.up),
+				Mathf.Infinity,
+				_layerMask
+			);
+			_rayNormal = _hit.normal;
 		}
 
 		private void KillBullet() => Destroy(gameObject);

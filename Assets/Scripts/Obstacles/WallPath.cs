@@ -1,9 +1,6 @@
 /*
 	Moves between >= 2 points, optionally easing between each point.
 	Parent gameObject should not move, only its positions & Walls
-
-	TODO: spawn line on runtime for indication
-		https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Gizmos.DrawLine.html
 */
 
 using System.Collections.Generic;
@@ -82,24 +79,36 @@ namespace BulletBrigade {
 
 			if (_loop)
 			{
-				posArray = listV2toV3(_points.ToList());
+				posArray = ListV2toV3(_points.ToList());
 			}
 			else
 			{
 				HashSet<Vector2> deduplicated = new(_points);
-				posArray = listV2toV3(deduplicated.ToList());
+				posArray = ListV2toV3(deduplicated.ToList());
 			}
 
 			line.positionCount = posArray.Count;
 			line.SetPositions(posArray.ToArray());
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
-			// get two points sandwiching current interval
-			float interval = (Time.time - _startTime) % _pathDuration / _pathDuration;
-			int p1Index = 0;
+			float timePassed = Time.time - _startTime;
+
+			foreach (var pair in _wallPhaseMap)
+			{
+				float phase = pair.Value;
+				float interval = (timePassed + phase) % _pathDuration / _pathDuration;
+
+				pair.Key.position = GetWallPos(pair.Key, interval);
+			}
 			
+		}
+
+		private Vector2 GetWallPos(Transform wall, float interval)
+		{
+			// get two points sandwiching current interval [0 -> 1]
+			int p1Index = default;
 			for (int i = _intervals.Count - 1; i >= 0; i--)
 			{
 				if (interval < _intervals[i]) continue;
@@ -107,25 +116,19 @@ namespace BulletBrigade {
 				break;
 			}
 
+			// get lerped position
 			Vector2 point1 = _points[p1Index];
 			Vector2 point2 = _points[p1Index + 1];
 			float t1 = _intervals[p1Index];
 			float t2 = _intervals[p1Index + 1];
 			float t = (interval - t1) / (t2 - t1);
 			
-			if (_useSineEasing) EaseIOSine(ref t);
+			if (_useSineEasing) t = EaseIOSine(t);
 
-			// move wall(s)
-			foreach (var pair in _wallPhaseMap)
-			{
-				float phase = pair.Value;
-				Vector2 lerpPos = Vector2.Lerp(point1, point2, (t + phase) % 1); // TODO: set phase above !!!!!!!!!!!!!!
-
-				pair.Key.position = lerpPos;
-			}
+			return Vector2.Lerp(point1, point2, t);
 		}
 
-		private List<Vector3> listV2toV3(List<Vector2> original)
+		private List<Vector3> ListV2toV3(List<Vector2> original)
 		{
 			List<Vector3> convert = new(original.Capacity);
 			foreach (Vector2 v2 in original)
@@ -137,7 +140,7 @@ namespace BulletBrigade {
 		}
 
 		// https://easings.net/#easeInOutSine
-		private float EaseIOSine(ref float t)
+		private float EaseIOSine(float t)
 			=> -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
 	}
 }
