@@ -1,6 +1,7 @@
 /*
 	Moves toward player constantly, slower than the player, when within range.
 	Wanders around randomly when outside range.
+	Avoids walls in front of it.
 */
 
 using System;
@@ -21,21 +22,23 @@ namespace BulletBrigade
 		private Rigidbody2D _rb;
 		private Entity _entity;
 		private Player _plr;
-
-		private float _perlinX;
-		private float _perlinY;
-		private float _perlinStep = 0;
+		private LayerMask _layerMask;
 
 		private Vector2 _moveDir = Vector2.zero;
 		private Vector2 _savedMoveDir;
 		private Action<Vector2> _stateFunc;
 		private float _stateChangeTime = Mathf.NegativeInfinity;
 
+		private float _perlinX;
+		private float _perlinY;
+		private float _perlinStep = 0;
+
 		private void Awake()
 		{
 			_rb = GetComponent<Rigidbody2D>();
 			_entity = GetComponent<Entity>();
 			_plr = FindAnyObjectByType<Player>();
+			_layerMask = LayerMask.GetMask("Wall");
 
 			_perlinX = UnityEngine.Random.Range(0f, 10000f);
 			_perlinY = UnityEngine.Random.Range(0f, 10000f);
@@ -80,8 +83,7 @@ namespace BulletBrigade
 			float timeSinceStateChange = Time.time - _stateChangeTime;
 			if (timeSinceStateChange < _preIdlePause) return;
 
-			// use perlin noise to decide movement
-			// lerp savedMoveDir w/ moveDir to prevent rotational jerk upon Idle statechange
+			// use perlin noise to decide movement direction
 			float speedAdjust = Mathf.Min(timeSinceStateChange - _preIdlePause, 5) * 1/5;
 			_perlinStep += Time.fixedDeltaTime / 5;
 			
@@ -91,6 +93,8 @@ namespace BulletBrigade
 			), 0, 1) * TAU;
 
 			_moveDir = new Vector2(Mathf.Cos(rand), Mathf.Sin(rand)).normalized;
+
+			// lerp savedMoveDir w/ moveDir to prevent rotational jerk upon Idle statechange
 			_moveDir = Vector2.Lerp(_moveDir, _savedMoveDir, 1 - speedAdjust);
 			_rb.linearVelocity = _moveDir * _wanderSpeed * speedAdjust;
 		}

@@ -47,9 +47,12 @@ namespace BulletBrigade {
 				BulletsInMag = MagazineSize;
 			}
 
-			// shoot
+			// shoot without touching shooter (y/2 doesn't work?)
 			GameObject bulletObj = Instantiate(
-				_bulletPrefab, _offsetObj.position, _offsetObj.rotation, _bulletsHolder
+				_bulletPrefab,
+				_offsetObj.position + _offsetObj.up * _bulletPrefab.transform.lossyScale.y,
+				_offsetObj.rotation,
+				_bulletsHolder
 			);
 
 			Bullet bullet = bulletObj.GetComponent<Bullet>();

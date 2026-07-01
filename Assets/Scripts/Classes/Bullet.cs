@@ -1,6 +1,7 @@
 /*
 	Handles gun functionality
 	Actually firing it is handled in corresponding Entity script (e.g. Player.cs)
+	Damages *all* entities, player or enemy
 */
 
 using UnityEngine;
@@ -47,18 +48,13 @@ namespace BulletBrigade
 			Entity entity = otherObj.GetComponent<Entity>();
 			if (entity)
 			{
-				if (otherObj.CompareTag("Player"))
-				{
-					// TODO: shoot bullet at yourself for something to happen(?) (damage?)
-					return;
-				}
-
+				// if (otherObj.CompareTag("Player"))
 				entity.TakeDamage(_damage);
 				KillBullet();
 				return;
 			}
 
-			Wall wall = otherObj.GetComponent<Wall>();
+			Obstacle wall = otherObj.GetComponent<Obstacle>();
 			if (wall)
 			{
 				if (_bouncesLeft == 0)

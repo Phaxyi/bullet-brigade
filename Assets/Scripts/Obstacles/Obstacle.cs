@@ -5,8 +5,11 @@
 using UnityEngine;
 
 namespace BulletBrigade {
-	public class Wall : MonoBehaviour
+	public class Obstacle : MonoBehaviour
 	{
+		// used in WallPath.cs
+		public float phase = 0; 
+
 		[SerializeField] private bool _instakill;
 		[SerializeField] private float _damage;
 		private SpriteRenderer _rd;
