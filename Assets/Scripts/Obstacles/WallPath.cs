@@ -53,7 +53,7 @@ namespace BulletBrigade {
 			
 			Destroy(posHolder.gameObject);
 
-			// generate dict `_pointIntervalMap` of positions to lerp with based on given interval
+			// generate dict `_intervals` of positions to lerp with based on given interval
 			// based on distances between each other
 			List<float> intermediate = new();
 			Vector2 lastPoint = _points[0];
@@ -99,12 +99,12 @@ namespace BulletBrigade {
 				float phase = pair.Value;
 				float interval = (timePassed + phase) % _pathDuration / _pathDuration;
 
-				pair.Key.position = GetWallPos(pair.Key, interval);
+				pair.Key.position = GetWallPos(interval);
 			}
 			
 		}
 
-		private Vector2 GetWallPos(Transform wall, float interval)
+		private Vector2 GetWallPos(float interval)
 		{
 			// get two points sandwiching current interval [0 -> 1]
 			int p1Index = default;
@@ -130,10 +130,7 @@ namespace BulletBrigade {
 		private List<Vector3> ListV2toV3(List<Vector2> original)
 		{
 			List<Vector3> convert = new(original.Capacity);
-			foreach (Vector2 v2 in original)
-			{
-				convert.Add(v2);
-			}
+			foreach (Vector2 v2 in original) convert.Add(v2);
 
 			return convert;
 		}
