@@ -11,12 +11,23 @@ namespace BulletBrigade {
 
 		[SerializeField] private float _rotateSpeed = 275f;
 		[SerializeField] private float _moveSpeed = 4f;
+		[SerializeField] private float _dashDistance = 2f;
+		[field: SerializeField] public float DashCooldown { get; private set; } = 3f;
+		[field: SerializeField] public float LastDashTime { get; private set; } = Mathf.NegativeInfinity;
+
+		private Transform _persistent;
+		private Transform _renderer;
+		private LayerMask _layerMask;
 		private Vector2 _moveDir = Vector2.zero;
 		private Rigidbody2D _rb;
 		private Gun _gun;
 
 		private void Awake()
 		{
+			_persistent = GameObject.Find("Persistent").transform;
+			_renderer = transform.Find("Renderer");
+			_layerMask = LayerMask.GetMask("Wall");
+
 			entity = GetComponent<Entity>();
 			_rb = GetComponent<Rigidbody2D>();
 			_gun = GetComponent<Gun>();
@@ -54,10 +65,48 @@ namespace BulletBrigade {
 			_moveDir = inputVal.Get<Vector2>();
 		}
 
-		private void OnFire(InputValue inputVal)
+		private void OnFire(InputValue _)
 		{
 			if (entity.dead || entity.invincible) return;
 			_gun.Fire();
+		}
+
+		private void OnDash(InputValue _)
+		{
+			if (entity.dead || entity.invincible || Time.time - LastDashTime < DashCooldown) return;
+			LastDashTime = Time.time;
+
+			// get dash end position, blocked by walls
+			RaycastHit2D hit = Physics2D.Raycast(
+				transform.position,
+				transform.TransformDirection(Vector2.up),
+				_dashDistance,
+				_layerMask
+			);
+			
+			Vector3 oldPos = transform.position;
+			Vector3 endPos = hit ? hit.point : transform.position + transform.up * _dashDistance;
+			transform.position = endPos;
+
+			// afterimage by cloning the player sprite
+			float magnitude = (oldPos - endPos).magnitude;
+			for (float dist = 0; dist <= magnitude; dist += 0.4f)
+			{
+				Transform afterimage = Instantiate(
+					_renderer,
+					oldPos + transform.up * dist,
+					transform.rotation,
+					_persistent
+				);
+				SpriteRenderer afterRd = afterimage.GetComponent<SpriteRenderer>();
+
+				afterimage.name = "afterimage";
+				afterimage.localScale = _renderer.lossyScale * 0.9f;
+				afterRd.color = new Color(1, 1, 1, 0.15f);
+				Destroy(afterimage.gameObject, 2.0f);
+			}
+
+			// TODO: UI
 		}
 	}
 }
