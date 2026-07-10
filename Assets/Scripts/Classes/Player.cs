@@ -84,8 +84,8 @@ namespace BulletBrigade {
 				_layerMask
 			);
 			
-			Vector3 oldPos = transform.position;
-			Vector3 endPos = hit ? hit.point : transform.position + transform.up * _dashDistance;
+			Vector2 oldPos = transform.position;
+			Vector2 endPos = hit ? hit.point : transform.position + transform.up * _dashDistance;
 			transform.position = endPos;
 
 			// afterimage by cloning the player sprite
@@ -94,7 +94,7 @@ namespace BulletBrigade {
 			{
 				Transform afterimage = Instantiate(
 					_renderer,
-					oldPos + transform.up * dist,
+					(Vector3)oldPos + transform.up * dist,
 					transform.rotation,
 					_persistent
 				);
@@ -105,8 +105,6 @@ namespace BulletBrigade {
 				afterRd.color = new Color(1, 1, 1, 0.15f);
 				Destroy(afterimage.gameObject, 2.0f);
 			}
-
-			// TODO: UI
 		}
 	}
 }

@@ -1,5 +1,7 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace BulletBrigade
 {
@@ -31,6 +33,7 @@ namespace BulletBrigade
 		private float _perlinX;
 		private float _perlinY;
 		private float _perlinStep = 0;
+		private int _rotDegreeOffset = 0;
 
 		private void Awake()
 		{
@@ -76,8 +79,6 @@ namespace BulletBrigade
 
 		private void Idle(Vector2 _)
 		{
-			_moveDir = Vector2.zero;
-
 			// short pause before wandering
 			float timeSinceStateChange = Time.time - _stateChangeTime;
 			if (timeSinceStateChange < _preIdlePause) return;
@@ -85,13 +86,19 @@ namespace BulletBrigade
 			// use perlin noise to decide movement direction
 			float speedAdjust = Mathf.Min(timeSinceStateChange - _preIdlePause, 5) * 1/5;
 			_perlinStep += Time.fixedDeltaTime / 5;
-			
+
 			float rand = Mathf.Clamp(Mathf.PerlinNoise(
 				_perlinX + _perlinStep,
 				_perlinY - _perlinStep
 			), 0, 1) * TAU;
 
-			_moveDir = new Vector2(Mathf.Cos(rand), Mathf.Sin(rand)).normalized;
+			// bias `_moveDir` with rotation when avoiding walls
+			const float DETECT_WALL_DIST = 0.25f;
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, _moveDir, DETECT_WALL_DIST, _layerMask);
+			if (hit) _rotDegreeOffset += 160;
+
+			_moveDir = Quaternion.Euler(0, 0, _rotDegreeOffset)
+				* new Vector2(Mathf.Cos(rand), Mathf.Sin(rand)).normalized;
 
 			// lerp savedMoveDir w/ moveDir to prevent rotational jerk upon Idle statechange
 			_moveDir = Vector2.Lerp(_moveDir, _savedMoveDir, 1 - speedAdjust);
@@ -103,7 +110,7 @@ namespace BulletBrigade
 			Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _moveDir);
 			Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotateSpeed * Time.fixedDeltaTime);
 
-			_rb.SetRotation(rotation);
+			_rb.SetRotation(targetRotation);
 		}
 	}
 }
