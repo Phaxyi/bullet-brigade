@@ -1,4 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BulletBrigade {
 	/// <summary>
@@ -13,49 +18,84 @@ namespace BulletBrigade {
 		public float LastReloadTime { get; private set; } = Mathf.NegativeInfinity;
 		public float BulletsInMag { get; private set; }
 
+		// gun controller
+		private static readonly List<Gun> _inputBoundGuns = new();
+		[SerializeField] private bool _manualControl;
+		[SerializeField] private bool _damageEnemies;
+		[SerializeField] private float _autoShootDelay;
+
+		// gun fields
 		[SerializeField] private GameObject _bulletPrefab;
 		[SerializeField] private float _bulletSpeed = 8;
 		[SerializeField] private float _bulletDamage = 10; 
 		[SerializeField] private float _shootCooldown = 0.15f;
 		[SerializeField] private int _maxBounces = 1;
-		private float _lastShootTime = Mathf.NegativeInfinity;
 
+		private Enemy _enemy;
 		private Transform _bulletsHolder;
-		private Transform _offsetObj;
+		private Vector2 _frontOffset;
+		private float _lastShootTime = Mathf.NegativeInfinity;
 
 		private void Awake()
 		{
+			_enemy = gameObject.GetComponent<Enemy>();
 			_bulletsHolder = GameObject.Find("Bullets").transform;
-			_offsetObj = transform.Find("BulletOffset");
+			// spawn without touching entity itself
+			_frontOffset = new Vector2(0, 0.5f + _bulletPrefab.transform.lossyScale.y/2 + 0.05f);
 
 			BulletsInMag = MagazineSize;
+			if (_manualControl) _inputBoundGuns.Add(this);
+			else StartCoroutine(AutoFire());
 		}
 
-		public void Fire()
+		private IEnumerator AutoFire()
+		{
+			while (true)
+			{
+				// admittedly checking state like this is quite dangerous since
+				// you'd have to ensure all chase states are named "Chase"
+				yield return new WaitForSeconds(_autoShootDelay);
+				if (_enemy.state != "Chase") continue;
+
+				Shoot();
+			}
+		}
+
+		public void Shoot()
 		{
 			if (Time.time - LastReloadTime < ReloadCooldown
 				|| Time.time - _lastShootTime < _shootCooldown) return;
 
-			// handle logic
+			// don't shoot if too close to wall
+			RaycastHit2D hit = Physics2D.Raycast(
+				transform.position, transform.TransformDirection(Vector2.up), 0.25f, Utils.wallLayerMask);
+			if (hit.collider != null) return;
+
+			// handle shoot logic
 			_lastShootTime = Time.time;
 			BulletsInMag -= 1;
-			
+
 			if (BulletsInMag == 0)
 			{
 				LastReloadTime = Time.time;
 				BulletsInMag = MagazineSize;
 			}
 
-			// shoot without touching shooter (y/2 doesn't work?)
 			GameObject bulletObj = Instantiate(
-				_bulletPrefab,
-				_offsetObj.position + _offsetObj.up * _bulletPrefab.transform.lossyScale.y,
-				_offsetObj.rotation,
-				_bulletsHolder
+				_bulletPrefab, transform.TransformPoint(_frontOffset),
+				transform.rotation, _bulletsHolder
 			);
-
 			Bullet bullet = bulletObj.GetComponent<Bullet>();
-			bullet.SetupBullet(_bulletSpeed, _bulletDamage, _maxBounces);
+			bullet.SetupBullet(_bulletSpeed, _bulletDamage, _maxBounces, _damageEnemies);
+		}
+
+		private void OnFire(InputValue _)
+		{
+			foreach (Gun manualGun in _inputBoundGuns)
+			{
+				Entity entity = manualGun.gameObject.GetComponent<Entity>();
+				if (!(entity.dead || entity.invincible)) manualGun.Shoot();
+			}
 		}
 	}
 }

@@ -190,7 +190,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.525
+  m_Radius: 0.5
 --- !u!114 &8023208591800203056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdabddcf2fa151d4c823586d3ea07ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  state: 
   _damage: 10
 --- !u!114 &7254748767527434722
 MonoBehaviour:

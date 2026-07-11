@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace BulletBrigade
@@ -54,8 +55,10 @@ namespace BulletBrigade
 			}
 		}
 
-		public void TakeDamage(float damage)
+		public void TryTakeDamage(float damage)
 		{
+			if (dead || invincible) return;
+
 			health = Mathf.Clamp(health - damage, 0, maxHealth);
 			if (health <= 0)
 			{

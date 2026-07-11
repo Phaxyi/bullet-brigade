@@ -17,20 +17,16 @@ namespace BulletBrigade {
 
 		private Transform _persistent;
 		private Transform _renderer;
-		private LayerMask _layerMask;
 		private Vector2 _moveDir = Vector2.zero;
 		private Rigidbody2D _rb;
-		private Gun _gun;
 
 		private void Awake()
 		{
 			_persistent = GameObject.Find("Persistent").transform;
 			_renderer = transform.Find("Renderer");
-			_layerMask = LayerMask.GetMask("Wall");
 
 			entity = GetComponent<Entity>();
 			_rb = GetComponent<Rigidbody2D>();
-			_gun = GetComponent<Gun>();
 
 			entity.onDied += OnDied;
 		}
@@ -65,12 +61,6 @@ namespace BulletBrigade {
 			_moveDir = inputVal.Get<Vector2>();
 		}
 
-		private void OnFire(InputValue _)
-		{
-			if (entity.dead || entity.invincible) return;
-			_gun.Fire();
-		}
-
 		private void OnDash(InputValue _)
 		{
 			if (entity.dead || entity.invincible || Time.time - LastDashTime < DashCooldown) return;
@@ -81,11 +71,11 @@ namespace BulletBrigade {
 				transform.position,
 				transform.TransformDirection(Vector2.up),
 				_dashDistance,
-				_layerMask
+				Utils.wallLayerMask
 			);
 			
 			Vector2 oldPos = transform.position;
-			Vector2 endPos = hit ? hit.point : transform.position + transform.up * _dashDistance;
+			Vector2 endPos = hit.collider ? hit.point : transform.position + transform.up * _dashDistance;
 			transform.position = endPos;
 
 			// afterimage by cloning the player sprite
@@ -102,7 +92,7 @@ namespace BulletBrigade {
 
 				afterimage.name = "afterimage";
 				afterimage.localScale = _renderer.lossyScale * 0.9f;
-				afterRd.color = new Color(1, 1, 1, 0.15f);
+				afterRd.color = new Color(1, 1, 1, 0.1f);
 				Destroy(afterimage.gameObject, 2.0f);
 			}
 		}

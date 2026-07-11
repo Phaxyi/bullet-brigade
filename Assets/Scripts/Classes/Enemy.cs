@@ -7,6 +7,8 @@ namespace BulletBrigade
 	/// </summary>
 	public class Enemy : MonoBehaviour
 	{
+		[HideInInspector] public string state;
+		
 		[SerializeField] private float _damage;
 		private Entity _entity;
 
@@ -22,9 +24,8 @@ namespace BulletBrigade
 
 			Player plr = collision.gameObject.GetComponent<Player>();
 			Entity entity = plr ? plr.entity : null;
-			if (plr == null || entity.dead || entity.invincible) return;
-
-			entity.TakeDamage(_damage);
+			
+			if (plr != null) entity.TryTakeDamage(_damage);
 		}
 	}
 }

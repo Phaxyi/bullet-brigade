@@ -22,7 +22,15 @@ namespace BulletBrigade {
 			_parent = transform.parent;
 			_entity = _parent.GetComponent<Entity>();
 
-			Utils.SetGlobalScale(transform, Vector2.one * 1.75f);
+			// https://discussions.unity.com/t/143857
+			var lossy = transform.lossyScale;
+			var globalScale = Vector2.one * 1.75f;
+
+			transform.localScale = Vector2.one;
+			transform.localScale = new Vector2 (
+				globalScale.x / lossy.x,
+				globalScale.y / lossy.y
+			);
 		}
 
 	private void Update()

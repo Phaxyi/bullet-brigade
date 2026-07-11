@@ -11,24 +11,23 @@ namespace BulletBrigade
 		private float _speed;
 		private float _damage;
 		private float _bouncesLeft;
+		private bool _damageEnemies;
 
 		private Rigidbody2D _rb;
-		private LayerMask _layerMask;
 		private Vector2 _currentDir;
 
-		// mimic constructor
-		public void SetupBullet(float speed, float damage, int maxBounces)
+		// mimic constructor structure
+		public void SetupBullet(float speed, float damage, int maxBounces, bool damageEnemies)
 		{
 			_speed = speed;
 			_damage = damage;
 			_bouncesLeft = maxBounces;
+			_damageEnemies = damageEnemies;
 		}
 
 		private void Awake()
 		{
 			_rb = GetComponent<Rigidbody2D>();
-			_layerMask = LayerMask.GetMask("Wall");
-
 			_currentDir = transform.up;
 		}
 
@@ -41,18 +40,20 @@ namespace BulletBrigade
 		private void OnTriggerEnter2D(Collider2D collider)
 		{
 			GameObject otherObj = collider.gameObject;
-
 			Entity entity = otherObj.GetComponent<Entity>();
-			if (entity)
+
+			// always damage players; damage enemies if _damageEnemies == true
+			if (entity != null)
 			{
-				// if (otherObj.CompareTag("Player"))
-				entity.TakeDamage(_damage);
+				if (otherObj.tag != "Player" && !_damageEnemies) return;
+
+				entity.TryTakeDamage(_damage);
 				KillBullet();
 				return;
 			}
-
+			Debug.Log("finding wall");
 			Obstacle wall = otherObj.GetComponent<Obstacle>();
-			if (wall)
+			if (wall != null)
 			{
 				if (_bouncesLeft == 0)
 				{
@@ -74,10 +75,10 @@ namespace BulletBrigade
 		private Vector2 GetRayNormal()
 		{
 			RaycastHit2D hit = Physics2D.Raycast(
-				transform.position - (transform.up * transform.lossyScale.y/2),
-				transform.TransformDirection(Vector2.up),
+				transform.position - (transform.up * 0.2f),
+				transform.up,
 				Mathf.Infinity,
-				_layerMask
+				Utils.wallLayerMask
 			);
 			return hit.normal;
 		}

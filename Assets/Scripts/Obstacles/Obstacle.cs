@@ -37,7 +37,7 @@ namespace BulletBrigade {
 			Entity entity = plr ? plr.entity : null;
 			if (plr == null || entity.dead || entity.invincible) return;
 
-			entity.TakeDamage(_instakill ? float.PositiveInfinity : _damage);
+			entity.TryTakeDamage(_instakill ? float.PositiveInfinity : _damage);
 			_rd.color = _hitColor;
 		}
 	}

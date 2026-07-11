@@ -4,7 +4,7 @@ namespace BulletBrigade {
 	/// <summary>
 	/// State holder for level with helper functions.
 	/// </summary>
-	public static class Level
+	public class Level : MonoBehaviour
 	{
 		// public static Action ...
 
