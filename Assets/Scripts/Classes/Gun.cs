@@ -24,17 +24,17 @@ namespace BulletBrigade {
 		[SerializeField] private bool _damageEnemies;
 		[SerializeField] private float _autoShootDelay;
 
-		// gun fields
+		// bullet fields
 		[SerializeField] private GameObject _bulletPrefab;
+		[SerializeField] private float _shootCooldown = 0.15f;
 		[SerializeField] private float _bulletSpeed = 8;
 		[SerializeField] private float _bulletDamage = 10; 
-		[SerializeField] private float _shootCooldown = 0.15f;
 		[SerializeField] private int _maxBounces = 1;
 
 		private Entity _entity;
 		private Enemy _enemy;
 		private Transform _bulletsHolder;
-		private Vector2 _frontOffset;
+		private Vector2 _spawnOffset;
 		private float _lastShootTime = Mathf.NegativeInfinity;
 
 		private void Awake()
@@ -43,14 +43,14 @@ namespace BulletBrigade {
 			_enemy = gameObject.GetComponent<Enemy>();
 			_bulletsHolder = GameObject.Find("Bullets").transform;
 			// spawn without touching entity itself
-			_frontOffset = new Vector2(0, 0.5f + _bulletPrefab.transform.lossyScale.y/2 + 0.05f);
+			_spawnOffset = new Vector2(0, 0.5f + _bulletPrefab.transform.lossyScale.y/2 + 0.05f);
 
 			BulletsInMag = MagazineSize;
 			if (_manualControl) _inputBoundGuns.Add(this);
-			else StartCoroutine(AutoFire());
+			else StartCoroutine(AutoShoot());
 		}
 
-		private IEnumerator AutoFire()
+		private IEnumerator AutoShoot()
 		{
 			while (true && !_entity.dead)
 			{
@@ -85,7 +85,7 @@ namespace BulletBrigade {
 			}
 
 			GameObject bulletObj = Instantiate(
-				_bulletPrefab, transform.TransformPoint(_frontOffset),
+				_bulletPrefab, transform.TransformPoint(_spawnOffset),
 				transform.rotation, _bulletsHolder
 			);
 			Bullet bullet = bulletObj.GetComponent<Bullet>();
