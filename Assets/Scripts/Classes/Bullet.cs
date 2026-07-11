@@ -12,17 +12,19 @@ namespace BulletBrigade
 		private float _damage;
 		private float _bouncesLeft;
 		private bool _damageEnemies;
+		private bool _useDotCollision;
 
 		private Rigidbody2D _rb;
 		private Vector2 _currentDir;
 
 		// mimic constructor structure
-		public void SetupBullet(float speed, float damage, int maxBounces, bool damageEnemies)
+		public void SetupBullet(float speed, float damage,int maxBounces, bool damageEnemies, bool useDotCollision)
 		{
 			_speed = speed;
 			_damage = damage;
 			_bouncesLeft = maxBounces;
 			_damageEnemies = damageEnemies;
+			_useDotCollision = useDotCollision;
 		}
 
 		private void Awake()
@@ -40,18 +42,22 @@ namespace BulletBrigade
 		private void OnTriggerEnter2D(Collider2D collider)
 		{
 			GameObject otherObj = collider.gameObject;
-			Entity entity = otherObj.GetComponent<Entity>();
+			Entity entity = otherObj.GetComponentInParent<Entity>();
 
 			// always damage players; damage enemies if _damageEnemies == true
+			bool collidewPlr = _useDotCollision
+				? otherObj.name == "PlayerCentreDot"
+				: otherObj.CompareTag("Player");
+
 			if (entity != null)
 			{
-				if (otherObj.tag != "Player" && !_damageEnemies) return;
+				if (!(collidewPlr || _damageEnemies)) return;
 
 				entity.TryTakeDamage(_damage);
 				KillBullet();
 				return;
 			}
-			Debug.Log("finding wall");
+
 			Obstacle wall = otherObj.GetComponent<Obstacle>();
 			if (wall != null)
 			{

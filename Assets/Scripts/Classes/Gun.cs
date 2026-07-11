@@ -89,14 +89,13 @@ namespace BulletBrigade {
 				transform.rotation, _bulletsHolder
 			);
 			Bullet bullet = bulletObj.GetComponent<Bullet>();
-			bullet.SetupBullet(_bulletSpeed, _bulletDamage, _maxBounces, _damageEnemies);
+			bullet.SetupBullet(_bulletSpeed, _bulletDamage, _maxBounces, _damageEnemies, false);
 		}
 
 		private void OnFire(InputValue _)
 		{
 			foreach (Gun manualGun in _inputBoundGuns)
 			{
-				Entity entity = manualGun.gameObject.GetComponent<Entity>();
 				manualGun.TryShoot();
 			}
 		}
