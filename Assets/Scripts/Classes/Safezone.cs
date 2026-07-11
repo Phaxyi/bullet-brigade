@@ -24,7 +24,7 @@ namespace BulletBrigade {
 			if (!collision.CompareTag("Player")) return;
 
 			Player plr = collision.GetComponent<Player>();
-			plr.entity.usingSafeZone = true;
+			plr.usingSafeZone = true;
 		}
 
 		private void OnTriggerExit2D(Collider2D collision)
@@ -32,7 +32,7 @@ namespace BulletBrigade {
 			if (!collision.CompareTag("Player")) return;
 
 			Player plr = collision.GetComponent<Player>();
-			plr.entity.usingSafeZone = false;
+			plr.usingSafeZone = false;
 		}
 	}
 }

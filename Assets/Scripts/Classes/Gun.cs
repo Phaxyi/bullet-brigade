@@ -31,6 +31,7 @@ namespace BulletBrigade {
 		[SerializeField] private float _shootCooldown = 0.15f;
 		[SerializeField] private int _maxBounces = 1;
 
+		private Entity _entity;
 		private Enemy _enemy;
 		private Transform _bulletsHolder;
 		private Vector2 _frontOffset;
@@ -38,6 +39,7 @@ namespace BulletBrigade {
 
 		private void Awake()
 		{
+			_entity = gameObject.GetComponent<Entity>();
 			_enemy = gameObject.GetComponent<Enemy>();
 			_bulletsHolder = GameObject.Find("Bullets").transform;
 			// spawn without touching entity itself
@@ -50,20 +52,21 @@ namespace BulletBrigade {
 
 		private IEnumerator AutoFire()
 		{
-			while (true)
+			while (true && !_entity.dead)
 			{
 				// admittedly checking state like this is quite dangerous since
 				// you'd have to ensure all chase states are named "Chase"
 				yield return new WaitForSeconds(_autoShootDelay);
 				if (_enemy.state != "Chase") continue;
 
-				Shoot();
+				TryShoot();
 			}
 		}
 
-		public void Shoot()
+		public void TryShoot()
 		{
-			if (Time.time - LastReloadTime < ReloadCooldown
+			if (_entity.dead || _entity.invincible
+				|| Time.time - LastReloadTime < ReloadCooldown
 				|| Time.time - _lastShootTime < _shootCooldown) return;
 
 			// don't shoot if too close to wall
@@ -94,7 +97,7 @@ namespace BulletBrigade {
 			foreach (Gun manualGun in _inputBoundGuns)
 			{
 				Entity entity = manualGun.gameObject.GetComponent<Entity>();
-				if (!(entity.dead || entity.invincible)) manualGun.Shoot();
+				manualGun.TryShoot();
 			}
 		}
 	}

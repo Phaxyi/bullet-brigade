@@ -8,6 +8,7 @@ namespace BulletBrigade {
 	/// </summary>
 	public class HealthbarUI : MonoBehaviour
 	{
+		private Player _plr;
 		private Entity _plrEntity;
 		private Image _barImage;
 		private TMP_Text _barText;
@@ -18,7 +19,9 @@ namespace BulletBrigade {
 
 		private void Awake()
 		{
-			_plrEntity = GameObject.FindWithTag("Player").GetComponent<Entity>();
+			GameObject playerObj = GameObject.FindWithTag("Player");
+			_plr = playerObj.GetComponent<Player>();
+			_plrEntity = playerObj.GetComponent<Entity>();
 
 			_barImage = transform.Find("Bar").GetComponent<Image>();
 			_barText = transform.Find("Value").GetComponent<TMP_Text>();
@@ -37,7 +40,7 @@ namespace BulletBrigade {
 			
 			float t = (Time.time - lerpStart) / LERP_TIME;
 			_barImage.fillAmount = Mathf.SmoothStep(_barImage.fillAmount, targetFill, t);
-			_barImage.color = _plrEntity.usingSafeZone ? Color.softGreen : Color.red;
+			_barImage.color = _plr.usingSafeZone ? Color.softGreen : Color.red;
 		}
 	}
 }

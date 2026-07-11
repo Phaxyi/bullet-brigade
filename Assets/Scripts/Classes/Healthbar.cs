@@ -25,9 +25,7 @@ namespace BulletBrigade {
 			// https://discussions.unity.com/t/143857
 			var lossy = transform.lossyScale;
 			var globalScale = Vector2.one * 1.75f;
-
-			transform.localScale = Vector2.one;
-			transform.localScale = new Vector2 (
+			transform.localScale = new Vector2(
 				globalScale.x / lossy.x,
 				globalScale.y / lossy.y
 			);
@@ -43,7 +41,7 @@ namespace BulletBrigade {
 			// anchor healthbar above parent
 			transform.position = new Vector2(
 				_parent.position.x,
-				_parent.position.y + _parent.lossyScale.y/2 + 0.4f
+				_parent.position.y + _parent.lossyScale.y/2 + 0.3f
 			);
 		}
 	}

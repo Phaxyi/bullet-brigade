@@ -1447,7 +1447,6 @@ MonoBehaviour:
   _bulletDamage: 10
   _shootCooldown: 0.15
   _maxBounces: 0
-  _frontOffset: {x: 0, y: 0}
 --- !u!1001 &907746722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1584,7 +1583,6 @@ MonoBehaviour:
   _bulletDamage: 10
   _shootCooldown: 0.15
   _maxBounces: 0
-  _frontOffset: {x: 0, y: 0}
 --- !u!1 &916811360
 GameObject:
   m_ObjectHideFlags: 0
@@ -3552,6 +3550,10 @@ PrefabInstance:
       propertyPath: _bulletPrefab
       value: 
       objectReference: {fileID: 5897509784078350670, guid: f22c4d273ca782f4bb3a431dc3f982c7, type: 3}
+    - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
+      propertyPath: _inputActions
+      value: 
+      objectReference: {fileID: -944628639613478452, guid: aa2627b835e3936409a5083e6af59cfe, type: 3}
     - target: {fileID: 3142340835957154240, guid: c06e4df2943ef4d4cacf448f2bb345b3, type: 3}
       propertyPath: _magazineSize
       value: 8

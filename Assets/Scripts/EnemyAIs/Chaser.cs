@@ -15,8 +15,8 @@ namespace BulletBrigade
 		[SerializeField] private float _chaseSpeed = 2f;
 		[SerializeField] private float _chaseRange = 5f;
 		[SerializeField] private float _preIdlePause = 1f;
-
 		private const float DETECT_WALL_DIST = 0.1f;
+		
 		private Rigidbody2D _rb;
 		private Entity _entity;
 		private Player _plr;
@@ -75,13 +75,14 @@ namespace BulletBrigade
 			if (timeSinceStateChange < _preIdlePause) return;
 
 			// bias _moveDir with rotation when avoiding walls
-			if ((Time.time - _rotChangeTime) > 1) {
+			if ((Time.time - _rotChangeTime) > 1)
+			{
 				Vector2 _frontOffset = new(0, 0.5f);
 				RaycastHit2D hit = Physics2D.Raycast(
 					transform.TransformPoint(_frontOffset),
 					transform.up, DETECT_WALL_DIST, Utils.wallLayerMask);
 
-				Debug.DrawRay(transform.TransformPoint(_frontOffset), transform.up * DETECT_WALL_DIST); // temp
+				// Debug.DrawRay(transform.TransformPoint(_frontOffset), transform.up * DETECT_WALL_DIST);
 				if (hit.collider) {
 					_rotOffset += 120;
 					_rotChangeTime = Time.time;

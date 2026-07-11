@@ -7,13 +7,14 @@ namespace BulletBrigade {
 	/// </summary>
 	public class Player : MonoBehaviour
 	{
+		[field: SerializeField] public float DashCooldown { get; private set; } = 3f;
+		[field: SerializeField] public float LastDashTime { get; private set; } = Mathf.NegativeInfinity;
 		[HideInInspector] public Entity entity;
+		[HideInInspector] public bool usingSafeZone;
 
 		[SerializeField] private float _rotateSpeed = 275f;
 		[SerializeField] private float _moveSpeed = 4f;
 		[SerializeField] private float _dashDistance = 2f;
-		[field: SerializeField] public float DashCooldown { get; private set; } = 3f;
-		[field: SerializeField] public float LastDashTime { get; private set; } = Mathf.NegativeInfinity;
 
 		private Transform _persistent;
 		private Transform _renderer;
@@ -22,13 +23,12 @@ namespace BulletBrigade {
 
 		private void Awake()
 		{
+			entity = GetComponent<Entity>();
+			entity.onDied += OnDied;
+
 			_persistent = GameObject.Find("Persistent").transform;
 			_renderer = transform.Find("Renderer");
-
-			entity = GetComponent<Entity>();
 			_rb = GetComponent<Rigidbody2D>();
-
-			entity.onDied += OnDied;
 		}
 
 		private void FixedUpdate()
@@ -50,16 +50,10 @@ namespace BulletBrigade {
 			_rb.SetRotation(rotation);
 		}
 
-		private void OnDied()
-		{
-			Debug.Log("im dead (Player.cs)");
-		}
+		private void OnDied() => Debug.Log("im dead (Player.cs)");
 
 		// INPUT
-		private void OnMove(InputValue inputVal)
-		{
-			_moveDir = inputVal.Get<Vector2>();
-		}
+		private void OnMove(InputValue inputVal) => _moveDir = inputVal.Get<Vector2>();
 
 		private void OnDash(InputValue _)
 		{
@@ -75,7 +69,7 @@ namespace BulletBrigade {
 			);
 			
 			Vector2 oldPos = transform.position;
-			Vector2 endPos = hit.collider ? hit.point : transform.position + transform.up * _dashDistance;
+			Vector2 endPos = hit.collider ? hit.point : (transform.position + transform.up * _dashDistance);
 			transform.position = endPos;
 
 			// afterimage by cloning the player sprite

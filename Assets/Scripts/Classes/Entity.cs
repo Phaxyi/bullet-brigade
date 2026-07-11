@@ -15,7 +15,6 @@ namespace BulletBrigade
 		[HideInInspector] public Healthbar healthbar;
 		public float maxHealth;
 		public float health;
-		public bool usingSafeZone = false;
 		public bool invincible = false; // true if in safezone
 		public bool dead = false;
 
@@ -24,6 +23,7 @@ namespace BulletBrigade
 		private Rigidbody2D _rb;
 		private SpriteRenderer _rd;
 		private CircleCollider2D _coll2d;
+		private Player _plr; // may not exist
 		private float _lastHitTime = Mathf.NegativeInfinity;
 
 		private void Awake()
@@ -31,6 +31,7 @@ namespace BulletBrigade
 			_rb = GetComponent<Rigidbody2D>();
 			_rd = transform.Find("Renderer").GetComponent<SpriteRenderer>();
 			_coll2d = GetComponent<CircleCollider2D>();
+			_plr = GetComponent<Player>();
 
 			healthbar = Instantiate(_healthBarPrefab, transform).GetComponent<Healthbar>();
 			healthbar.gameObject.name = "Healthbar";
@@ -51,7 +52,7 @@ namespace BulletBrigade
 			else
 			{
 				_rd.enabled = true;
-				invincible = usingSafeZone ? true : false;
+				invincible = _plr != null && _plr.usingSafeZone;
 			}
 		}
 
