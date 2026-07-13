@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 namespace BulletBrigade {
 	/// <summary>
 	/// Handles player-centric logic and movement.
+	/// Press E to dash.
 	/// </summary>
 	public class Player : MonoBehaviour
 	{
