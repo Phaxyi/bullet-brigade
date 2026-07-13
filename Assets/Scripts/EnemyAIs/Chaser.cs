@@ -39,7 +39,7 @@ namespace BulletBrigade
 			_plr = FindAnyObjectByType<Player>();
 			_seed = UnityEngine.Random.Range(0f, 100000f);
 		}
-
+		
 		private void FixedUpdate()
 		{
 			if (_entity.dead || _plr.entity.dead) return;

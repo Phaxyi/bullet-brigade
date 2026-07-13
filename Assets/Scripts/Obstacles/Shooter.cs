@@ -19,35 +19,21 @@ namespace BulletBrigade
 		[SerializeField] private float _bulletDamage = 10; 
 		[SerializeField] private int _maxBounces = 0;
 
-		private Transform _bulletsHolder;
-		private Vector2 _spawnOffset;
-
 		private void Awake()
 		{
-			_bulletsHolder = GameObject.Find("Bullets").transform;
-			_spawnOffset = new Vector2(0, 0.5f + _bulletPrefab.transform.lossyScale.y/2 + 0.05f);
-
-			Debug.Log(_shootPattern);
 			Func<IEnumerator> func = (_shootPattern != "") ? PatternedShootLoop : SimpleShootLoop; 
 			StartCoroutine(func());
 		}
 
-		private void SpawnBullet()
-		{
-			GameObject bulletObj = Instantiate(
-				_bulletPrefab, transform.TransformPoint(_spawnOffset),
-				transform.rotation, _bulletsHolder
-			);
-			Bullet bullet = bulletObj.GetComponent<Bullet>();
-			bullet.SetupBullet(_bulletSpeed, _bulletDamage, _maxBounces, false, true);
-		}
+		private void CallBulletSpawn()
+			=> Bullet.Spawn(_bulletPrefab, transform, _bulletSpeed, _bulletDamage, _maxBounces, false, true);
 
 		private IEnumerator SimpleShootLoop()
 		{
 			while (true)
 			{
 				yield return new WaitForSeconds(_shootDelay);
- 				SpawnBullet();
+ 				CallBulletSpawn();
 			}
 		}
 
@@ -58,7 +44,8 @@ namespace BulletBrigade
 			{
 				yield return new WaitForSeconds(_shootDelay);
 				index = (index + 1) % _shootPattern.Length;
-				if (_shootPattern[index] == '1') SpawnBullet();
+
+				if (_shootPattern[index] == '1') CallBulletSpawn();
 			}
 		}
 	}

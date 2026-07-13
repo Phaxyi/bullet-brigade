@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BulletBrigade
@@ -5,10 +6,12 @@ namespace BulletBrigade
 	/// <summary>
 	/// Handles bullets shot by Gun.
 	/// Bullets damage *all* entities, player or enemy alike.
+	/// Uses object pooling.
 	/// </summary>
 	public class Bullet : MonoBehaviour
 	{
 		private const float DESPAWN_DIST = 20;
+
 		private float _speed;
 		private float _damage;
 		private int _bouncesLeft;
@@ -17,22 +20,66 @@ namespace BulletBrigade
 
 		private Rigidbody2D _rb;
 		private Vector2 _currentDir;
-		private Vector3 _spawnPos;
+		private Vector2 _spawnPos;
+		private GameObject _prefab;
+
+		private static Transform _bulletsHolder;
+		private static readonly Dictionary<GameObject, List<Bullet>> _inactivePool = new();
+		private static readonly Dictionary<GameObject, List<Bullet>> _activePool = new();
 
 		// mimic constructor structure
-		public void SetupBullet(float speed, float damage,
-			int maxBounces, bool damageEnemies, bool useDotCollision)
+		public static void Spawn(GameObject prefab, Transform spawnTrans,
+			float speed, float damage, int maxBounces, bool damageEnemies, bool useDotCollision)
 		{
-			_speed = speed;
-			_damage = damage;
-			_bouncesLeft = maxBounces;
-			_damageEnemies = damageEnemies;
-			_useDotCollision = useDotCollision;
+			if (!_inactivePool.ContainsKey(prefab))
+			{
+				_inactivePool.Add(prefab, new());
+				_activePool.Add(prefab, new());
+			}
+
+			List<Bullet> inactive = _inactivePool[prefab];
+			Vector2 spawnPos = spawnTrans.TransformPoint(
+				new(0, 0.5f + prefab.transform.lossyScale.y/2 + 0.05f)
+			);
+			Bullet bullet;
+
+			// retrieve from pool
+			if (inactive.Count > 0)
+			{
+				bullet = inactive[0];
+				inactive.RemoveAt(0);
+
+				Transform bulletTrans = bullet.transform;
+				bulletTrans.SetPositionAndRotation(spawnPos, spawnTrans.rotation);
+				bullet.gameObject.SetActive(true);
+			}
+			// spawn from scratch
+			else 
+			{
+				GameObject bulletObj = Instantiate(prefab, spawnPos, spawnTrans.rotation, _bulletsHolder);
+				bullet = bulletObj.GetComponent<Bullet>();
+			}
+
+			bullet._prefab = prefab;
+			bullet._speed = speed;
+			bullet._damage = damage;
+			bullet._bouncesLeft = maxBounces;
+			bullet._damageEnemies = damageEnemies;
+			bullet._useDotCollision = useDotCollision;
+
+			_activePool[prefab].Add(bullet);
+			bullet.Setup();
 		}
 
 		private void Awake()
 		{
 			_rb = GetComponent<Rigidbody2D>();
+			_bulletsHolder = GameObject.Find("Bullets").transform;
+		}
+
+		// function runs on every Spawn() call to re-init changing fields
+		private void Setup()
+		{
 			_currentDir = transform.up;
 			_spawnPos = transform.position;
 		}
@@ -42,7 +89,7 @@ namespace BulletBrigade
 			_rb.linearVelocity = _currentDir * _speed;
 			GetRayNormal();
 
-			if ((_spawnPos - transform.position).magnitude > DESPAWN_DIST)
+			if (((Vector3)_spawnPos - transform.position).magnitude > DESPAWN_DIST)
 			{
 				KillBullet();
 			}
@@ -98,6 +145,11 @@ namespace BulletBrigade
 			return hit.normal;
 		}
 
-		private void KillBullet() => Destroy(gameObject);
+		private void KillBullet() {
+			if (!(_activePool.ContainsKey(_prefab) && _activePool[_prefab].Remove(this))) return;
+			_inactivePool[_prefab].Add(this);
+			
+			gameObject.SetActive(false);
+		}
 	}	
 }

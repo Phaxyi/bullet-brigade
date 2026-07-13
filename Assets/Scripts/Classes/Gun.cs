@@ -31,25 +31,21 @@ namespace BulletBrigade {
 
 		private Entity _entity;
 		private Enemy _enemy;
-		private Transform _bulletsHolder;
-		private Vector2 _spawnOffset;
 		private float _lastShootTime = Mathf.NegativeInfinity;
 
 		private void Awake()
 		{
 			_entity = gameObject.GetComponent<Entity>();
 			_enemy = gameObject.GetComponent<Enemy>();
-			_bulletsHolder = GameObject.Find("Bullets").transform;
-			// spawn without touching entity itself
-			_spawnOffset = new Vector2(0, 0.5f + _bulletPrefab.transform.lossyScale.y/2 + 0.05f);
-
 			BulletsInMag = MagazineSize;
+
 			if (_manualControl) _inputBoundGuns.Add(this);
 			else StartCoroutine(AutoShoot());
 		}
 
 		private IEnumerator AutoShoot()
 		{
+			// TODO: enemy still shoots if player is dead (state remains Chase)
 			while (true && !_entity.dead)
 			{
 				// admittedly checking state like this is quite dangerous since
@@ -81,13 +77,8 @@ namespace BulletBrigade {
 				LastReloadTime = Time.time;
 				BulletsInMag = MagazineSize;
 			}
-
-			GameObject bulletObj = Instantiate(
-				_bulletPrefab, transform.TransformPoint(_spawnOffset),
-				transform.rotation, _bulletsHolder
-			);
-			Bullet bullet = bulletObj.GetComponent<Bullet>();
-			bullet.SetupBullet(_bulletSpeed, _bulletDamage, _maxBounces, _damageEnemies, false);
+			
+			Bullet.Spawn(_bulletPrefab, transform, _bulletSpeed, _bulletDamage, _maxBounces, _damageEnemies, false);
 		}
 
 		private void OnFire(InputValue _)
