@@ -101,13 +101,13 @@ namespace BulletBrigade
 			Entity entity = otherObj.GetComponentInParent<Entity>();
 
 			// always damage players; damage enemies if _damageEnemies == true
-			bool collidewPlr = _useDotCollision
+			bool collideWithPlr = _useDotCollision
 				? otherObj.name == "PlayerCentreDot"
 				: otherObj.CompareTag("Player");
 
 			if (entity != null)
 			{
-				if (!(collidewPlr || _damageEnemies)) return;
+				if (!(collideWithPlr || _damageEnemies)) return;
 
 				entity.TryTakeDamage(_damage);
 				KillBullet();
@@ -146,9 +146,10 @@ namespace BulletBrigade
 		}
 
 		private void KillBullet() {
-			if (!(_activePool.ContainsKey(_prefab) && _activePool[_prefab].Remove(this))) return;
+			if (!(_activePool.ContainsKey(_prefab)
+				&& _activePool[_prefab].Remove(this))) return;
+
 			_inactivePool[_prefab].Add(this);
-			
 			gameObject.SetActive(false);
 		}
 	}	

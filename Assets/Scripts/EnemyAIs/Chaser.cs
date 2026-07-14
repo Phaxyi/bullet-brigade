@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BulletBrigade
 {
 	/// <summary>
-	/// Basic "Chaser" enemy that moves toward player constantly, when within range.
+	/// Basic "Chaser" enemy that moves toward player constantly, when within range or recently aggro'ed.
 	/// Wanders randomly when outside range (idle), also avoids walls in front in this mode.
 	/// TODO: visually rotate renderer only
 	/// </summary>
@@ -20,12 +20,11 @@ namespace BulletBrigade
 		private Rigidbody2D _rb;
 		private Entity _entity;
 		private Player _plr;
+		private Enemy _enemy;
 
 		private Vector2 _moveDir = Vector2.zero;
 		private Vector2 _savedMoveDir;
-		private Enemy _enemy;
 		private Action<Vector2> _stateFunc;
-
 		private float _seed;
 		private float _stateChangeTime = Mathf.NegativeInfinity;
 		private float _rotChangeTime = Mathf.NegativeInfinity;
@@ -45,7 +44,7 @@ namespace BulletBrigade
 			if (_entity.dead || _plr.entity.dead) return;
 
 			Vector2 dirToPlr = _plr.transform.position - transform.position;
-			if (dirToPlr.magnitude < _chaseRange) ChangeState(Chase);
+			if (Time.time - _entity.LastHitTime < 8 || dirToPlr.magnitude < _chaseRange) ChangeState(Chase);
 			else ChangeState(Idle);
 
 			_stateFunc(dirToPlr);
@@ -81,9 +80,10 @@ namespace BulletBrigade
 				RaycastHit2D hit = Physics2D.Raycast(
 					transform.TransformPoint(_frontOffset),
 					transform.up, DETECT_WALL_DIST, Utils.wallLayerMask);
-
 				// Debug.DrawRay(transform.TransformPoint(_frontOffset), transform.up * DETECT_WALL_DIST);
-				if (hit.collider) {
+
+				if (hit.collider)
+				{
 					_rotOffset += 120;
 					_rotChangeTime = Time.time;
 				}

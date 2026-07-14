@@ -13,6 +13,7 @@ namespace BulletBrigade
 		public Action onDied;
 
 		[HideInInspector] public Healthbar healthbar;
+		public float LastHitTime { get; private set; } = Mathf.NegativeInfinity;
 		public float maxHealth;
 		public float health;
 		public bool invincible = false; // true if in safezone
@@ -24,7 +25,6 @@ namespace BulletBrigade
 		private SpriteRenderer _rd;
 		private CircleCollider2D _coll2d;
 		private Player _plr; // may not exist
-		private float _lastHitTime = Mathf.NegativeInfinity;
 
 		private void Awake()
 		{
@@ -43,7 +43,7 @@ namespace BulletBrigade
 		{
 			if (dead || _iFrameSecs == 0) return;
 
-			float timeSinceHit = Time.time - _lastHitTime;
+			float timeSinceHit = Time.time - LastHitTime;
 			if (timeSinceHit < _iFrameSecs)
 			{
 				_rd.enabled = timeSinceHit % 0.1 < 0.05; // blink effect
@@ -68,7 +68,7 @@ namespace BulletBrigade
 				return;
 			}
 			
-			_lastHitTime = Time.time;
+			LastHitTime = Time.time;
 			Debug.Log($"{gameObject.name} down to {health} health.");
 		}
 
