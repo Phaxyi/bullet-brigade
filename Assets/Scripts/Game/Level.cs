@@ -21,7 +21,7 @@ namespace BulletBrigade {
 		{
 			Enemy.EnemyDied += () => KilledEnemies++;
 			Safe.SafeCollected += () => CollectedSafes++;
-			Safezone.EnteredSafezone += OnSafezoneEntered;
+			Safezone.TouchedExitZone += OnSafezoneEntered;
 
 			DontDestroyOnLoad(gameObject);
 		}

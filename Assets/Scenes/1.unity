@@ -2012,6 +2012,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6519087484008317997, guid: e16c14e2b2eb22746b285537dc8dabc2, type: 3}
+      propertyPath: _isExitZone
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8610876272850930620, guid: e16c14e2b2eb22746b285537dc8dabc2, type: 3}
       propertyPath: m_Name
       value: Safezone

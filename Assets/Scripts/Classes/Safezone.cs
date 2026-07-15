@@ -7,7 +7,8 @@ namespace BulletBrigade {
 	/// </summary>
 	public class Safezone : MonoBehaviour
 	{
-		public static Action EnteredSafezone; // TODO: make onlyy a certain safezone able to move to next level
+		public static Action TouchedExitZone;
+		public bool _isExitZone;
 
 		private void Awake()
 		{
@@ -20,6 +21,10 @@ namespace BulletBrigade {
 				(lossy.x - plr.transform.lossyScale.x) / lossy.x,
 				(lossy.y - plr.transform.lossyScale.y) / lossy.y
 			);
+
+			// special VFX for exit zone
+			if (!_isExitZone) return;
+			GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.3f, 0.3f);
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)
@@ -28,7 +33,8 @@ namespace BulletBrigade {
 
 			Player plr = collision.GetComponent<Player>();
 			plr.usingSafeZone = true;
-			EnteredSafezone?.Invoke();
+
+			if (_isExitZone) TouchedExitZone?.Invoke();
 		}
 
 		private void OnTriggerExit2D(Collider2D collision)

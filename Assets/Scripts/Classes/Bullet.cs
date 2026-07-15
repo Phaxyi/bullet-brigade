@@ -10,22 +10,21 @@ namespace BulletBrigade
 	/// </summary>
 	public class Bullet : MonoBehaviour
 	{
-		private const float DESPAWN_DIST = 20;
-
-		private float _speed;
-		private float _damage;
-		private int _bouncesLeft;
-		private bool _damageEnemies;
-		private bool _useDotCollision;
+		private static Transform _bulletsHolder; // static for optimisation
+		private static readonly Dictionary<GameObject, List<Bullet>> _inactivePool = new();
+		private static readonly Dictionary<GameObject, List<Bullet>> _activePool = new();
 
 		private Rigidbody2D _rb;
 		private Vector2 _currentDir;
 		private Vector2 _spawnPos;
 		private GameObject _prefab;
 
-		private static Transform _bulletsHolder; // static for optimisation
-		private static readonly Dictionary<GameObject, List<Bullet>> _inactivePool = new();
-		private static readonly Dictionary<GameObject, List<Bullet>> _activePool = new();
+		private const float DESPAWN_DIST = 20;
+		private float _speed;
+		private float _damage;
+		private int _bouncesLeft;
+		private bool _damageEnemies;
+		private bool _useDotCollision;
 
 		static Bullet()
 		{
