@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BulletBrigade {
@@ -6,6 +7,8 @@ namespace BulletBrigade {
 	/// </summary>
 	public class Safezone : MonoBehaviour
 	{
+		public static Action EnteredSafezone; // TODO: make onlyy a certain safezone able to move to next level
+
 		private void Awake()
 		{
 			Player plr = FindAnyObjectByType<Player>();
@@ -25,6 +28,7 @@ namespace BulletBrigade {
 
 			Player plr = collision.GetComponent<Player>();
 			plr.usingSafeZone = true;
+			EnteredSafezone?.Invoke();
 		}
 
 		private void OnTriggerExit2D(Collider2D collision)

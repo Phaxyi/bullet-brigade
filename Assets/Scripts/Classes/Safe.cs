@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BulletBrigade {
@@ -6,12 +7,14 @@ namespace BulletBrigade {
 	/// </summary>
 	public class Safe : MonoBehaviour
 	{
+		public static Action SafeCollected;
+
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
 			Player plr = collision.gameObject.GetComponent<Player>();
 			if (plr == null) return;
 
-			Level.CollectSafe();
+			SafeCollected?.Invoke();
 			Destroy(gameObject);
 		}
 	}

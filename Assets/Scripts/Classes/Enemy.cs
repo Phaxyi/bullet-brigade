@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BulletBrigade
@@ -8,6 +9,7 @@ namespace BulletBrigade
 	public class Enemy : MonoBehaviour
 	{
 		[HideInInspector] public string state;
+		public static Action EnemyDied;
 		
 		[SerializeField] private float _damage;
 		private Entity _entity;
@@ -15,7 +17,7 @@ namespace BulletBrigade
 		private void Awake()
 		{
 			_entity = GetComponent<Entity>();
-			// _entity.onDied += OnDied;
+			_entity.onDied += OnDied;
 		}
 
 		private void OnCollisionStay2D(Collision2D collision)
@@ -26,6 +28,11 @@ namespace BulletBrigade
 			Entity entity = plr ? plr.entity : null;
 			
 			if (plr != null) entity.TryTakeDamage(_damage);
+		}
+
+		private void OnDied()
+		{
+			EnemyDied?.Invoke();
 		}
 	}
 }

@@ -23,9 +23,19 @@ namespace BulletBrigade
 		private Vector2 _spawnPos;
 		private GameObject _prefab;
 
-		private static Transform _bulletsHolder;
+		private static Transform _bulletsHolder; // static for optimisation
 		private static readonly Dictionary<GameObject, List<Bullet>> _inactivePool = new();
 		private static readonly Dictionary<GameObject, List<Bullet>> _activePool = new();
+
+		static Bullet()
+		{
+			Level.LevelChanged += () =>
+			{
+				_inactivePool.Clear();
+				_activePool.Clear();
+				_bulletsHolder = null;
+			};
+		}
 
 		// mimic constructor structure
 		public static void Spawn(GameObject prefab, Transform spawnTrans,
@@ -73,8 +83,10 @@ namespace BulletBrigade
 
 		private void Awake()
 		{
+			if (!_bulletsHolder)
+				_bulletsHolder = GameObject.Find("/Bullets").transform;
+				
 			_rb = GetComponent<Rigidbody2D>();
-			_bulletsHolder = GameObject.Find("Bullets").transform;
 		}
 
 		// function runs on every Spawn() call to re-init changing fields
@@ -129,7 +141,7 @@ namespace BulletBrigade
 				_rb.SetRotation(Quaternion.LookRotation(transform.forward, dir));
 				_currentDir = dir;
 
-				_bouncesLeft -= 1;
+				_bouncesLeft--;
 				return;
 			}
 		}

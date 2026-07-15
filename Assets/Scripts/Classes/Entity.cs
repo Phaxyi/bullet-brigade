@@ -63,13 +63,11 @@ namespace BulletBrigade
 			health = Mathf.Clamp(health - damage, 0, maxHealth);
 			if (health <= 0)
 			{
-				Debug.Log($"{gameObject.name} has died.");
-				onDied.Invoke();
+				onDied?.Invoke();
 				return;
 			}
 			
 			LastHitTime = Time.time;
-			Debug.Log($"{gameObject.name} down to {health} health.");
 		}
 
 		private void CommonDeathFunc()

@@ -70,7 +70,7 @@ namespace BulletBrigade {
 
 			// handle shoot logic
 			_lastShootTime = Time.time;
-			BulletsInMag -= 1;
+			BulletsInMag--;
 
 			if (BulletsInMag == 0)
 			{
