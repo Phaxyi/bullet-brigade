@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BulletBrigade
 {
@@ -19,9 +20,10 @@ namespace BulletBrigade
 		private void Update()
 		{
 			Transform camTrans = gameObject.transform;
-			Vector2 newPos = Vector2.Lerp(camTrans.position, _plr.transform.position, 0.025f);
+			Vector2 newPos = Vector2.Lerp(	camTrans.position, _plr.transform.position, 0.025f	);
 			
-			camTrans.position = new Vector3(newPos.x, newPos.y, -10); // -10 to prevent weird artifacts
+			// -10z to prevent weird artifacts
+			camTrans.position = new Vector3(newPos.x, newPos.y, -10);
 		}
 	}
 }

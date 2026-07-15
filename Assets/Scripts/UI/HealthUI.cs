@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace BulletBrigade {
 		private Player _plr;
 		private Entity _plrEntity;
 		private Image _barImage;
+		private Image[] _hearts;
 		private TMP_Text _barText;
 
 		private const float LERP_TIME = 0.6f;
@@ -25,10 +27,12 @@ namespace BulletBrigade {
 
 			_barImage = transform.Find("Bar").GetComponent<Image>();
 			_barText = transform.Find("Value").GetComponent<TMP_Text>();
+			_hearts = transform.Find("HeartHolder").GetComponentsInChildren<Image>();
 		}
 
 		private void Update()
 		{
+			// healthbar
 			float newTargetFill = _plrEntity.health / _plrEntity.maxHealth;
 			if (targetFill != newTargetFill)
 			{
@@ -41,6 +45,14 @@ namespace BulletBrigade {
 			float t = (Time.time - lerpStart) / LERP_TIME;
 			_barImage.fillAmount = Mathf.SmoothStep(_barImage.fillAmount, targetFill, t);
 			_barImage.color = _plr.usingSafeZone ? Color.softGreen : Color.red;
+			
+			// display hearts
+			int i = 1;
+			foreach (Image heart in _hearts)
+			{
+				heart.color = Level.Hearts >= i ? Color.red : Color.black;
+				i++;
+			}
 		}
 	}
 }

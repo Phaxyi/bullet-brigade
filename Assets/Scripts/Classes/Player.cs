@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,8 @@ namespace BulletBrigade {
 	/// </summary>
 	public class Player : MonoBehaviour
 	{
+		public static Action PlayerDied;
+
 		[field: SerializeField] public float DashCooldown { get; private set; } = 3f;
 		[field: SerializeField] public float LastDashTime { get; private set; } = Mathf.NegativeInfinity;
 		[HideInInspector] public Entity entity;
@@ -51,7 +54,11 @@ namespace BulletBrigade {
 			_rb.SetRotation(rotation);
 		}
 
-		private void OnDied() => Debug.Log("im dead (Player.cs)");
+		private void OnDied()
+		{
+			PlayerDied?.Invoke();
+			Debug.Log("im dead (Player.cs)");
+		} 
 
 		// INPUT
 		private void OnMove(InputValue inputVal) => _moveDir = inputVal.Get<Vector2>();

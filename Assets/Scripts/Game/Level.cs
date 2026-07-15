@@ -10,35 +10,45 @@ namespace BulletBrigade {
 	{
 		public static Action LevelChanged;
 
-		public static int CurrLevel { get; private set; }
-		public static int Lives { get; private set; }
+		public static float LevelStartTime { get; private set; }
+		public static float Score { get; private set; }
+		public static int CurrentLevel { get; private set; }
+		public static int Hearts { get; private set; }
 		public static int CollectedSafes { get; private set; }
 		public static int TotalSafes { get; private set; }
 		public static int KilledEnemies { get; private set; }
 		public static int TotalEnemies { get; private set; }
 
+		private TransitionUI _transition;
+
 		private void Awake()
 		{
 			Enemy.EnemyDied += () => KilledEnemies++;
 			Safe.SafeCollected += () => CollectedSafes++;
+			Player.PlayerDied += () => EndLevel(false);
 			Safezone.TouchedExitZone += OnSafezoneEntered;
 
+			_transition = GameObject.Find("/Transition").GetComponent<TransitionUI>();
 			DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(_transition);
 		}
 
-		public static void StartNewGame()
+		public void StartNewGame()
 		{
-			Lives = 3;
+			StartCoroutine(_transition.ShowTransition("starting new game"));
+			Hearts = 3;
 			StartLevel(0);
 		}
 
-		private static void StartLevel(int newLevel)
+		private void StartLevel(int newLevel)
 		{
-			CurrLevel = newLevel;
+			CurrentLevel = newLevel;
 			AsyncOperation operation = SceneManager.LoadSceneAsync(newLevel.ToString(), LoadSceneMode.Single);
+			StartCoroutine(_transition.ShowTransition("test caption please use database"));
 
 			operation.completed += (x) =>
 			{
+				LevelStartTime = Time.time;
 				TotalEnemies = GameObject.Find("/Enemies").transform.childCount;
 				TotalSafes = GameObject.Find("/Safes").transform.childCount;
 				CollectedSafes = 0;
@@ -48,24 +58,26 @@ namespace BulletBrigade {
 			};
 		} 
 
-		private static void EndLevel(bool win)
+		private void EndLevel(bool win)
 		{
 			if (win)
 			{
-				StartLevel(CurrLevel + 1);
+				// basic score calculation
+				Score += Mathf.Max(60, 240 - (Time.time - LevelStartTime)) * Hearts/3;
+				StartLevel(CurrentLevel + 1);
 				return;
 			}
 
-			Lives--;
-			if (Lives == 0)
+			Hearts--;
+			if (Hearts == 0)
 			{
 				StartNewGame();
 				return;
 			}
-			StartLevel(CurrLevel);
+			StartLevel(CurrentLevel);
 		}
 
-		private static void OnSafezoneEntered()
+		private void OnSafezoneEntered()
 		{
 			if (CollectedSafes == TotalSafes && KilledEnemies == TotalEnemies)
 			{
