@@ -33,6 +33,11 @@ namespace BulletBrigade {
 		private Enemy _enemy;
 		private float _lastShootTime = Mathf.NegativeInfinity;
 
+		static Gun()
+		{
+			Level.BeforeLevelChanged += () => _inputBoundGuns.Clear();
+		}
+
 		private void Awake()
 		{
 			_entity = gameObject.GetComponent<Entity>();
@@ -83,6 +88,7 @@ namespace BulletBrigade {
 
 		private void OnFire(InputValue _)
 		{
+			Debug.Log(_inputBoundGuns.Count);
 			foreach (Gun manualGun in _inputBoundGuns)
 			{
 				manualGun.TryShoot();

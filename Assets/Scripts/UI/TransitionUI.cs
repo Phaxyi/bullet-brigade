@@ -1,5 +1,4 @@
 using System.Collections;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace BulletBrigade
 		{
 			_levelNumber.text = Level.CurrentLevel.ToString();
 			_caption.text = caption;
-			_score.text = Level.Score.ToString();
+			_score.text = Mathf.Floor(Level.Score).ToString();
 
 			_canvas.enabled = true;
 			yield return new WaitForSeconds(time);

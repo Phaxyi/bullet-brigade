@@ -8,7 +8,7 @@ namespace BulletBrigade {
 	/// </summary>
 	public class Level : MonoBehaviour
 	{
-		public static Action LevelChanged;
+		public static Action BeforeLevelChanged;
 
 		public static float LevelStartTime { get; private set; }
 		public static float Score { get; private set; }
@@ -43,6 +43,8 @@ namespace BulletBrigade {
 		private void StartLevel(int newLevel)
 		{
 			CurrentLevel = newLevel;
+			BeforeLevelChanged?.Invoke();
+
 			AsyncOperation operation = SceneManager.LoadSceneAsync(newLevel.ToString(), LoadSceneMode.Single);
 			StartCoroutine(_transition.ShowTransition("test caption please use database"));
 
@@ -53,8 +55,7 @@ namespace BulletBrigade {
 				TotalSafes = GameObject.Find("/Safes").transform.childCount;
 				CollectedSafes = 0;
 				KilledEnemies = 0;
-
-				LevelChanged?.Invoke();
+				// AfterLevelChanged?.Invoke();
 			};
 		} 
 
@@ -62,7 +63,7 @@ namespace BulletBrigade {
 		{
 			if (win)
 			{
-				// basic score calculation
+				// basic score calc
 				Score += Mathf.Max(60, 240 - (Time.time - LevelStartTime)) * Hearts/3;
 				StartLevel(CurrentLevel + 1);
 				return;

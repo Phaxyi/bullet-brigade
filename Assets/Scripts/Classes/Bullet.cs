@@ -28,7 +28,7 @@ namespace BulletBrigade
 
 		static Bullet()
 		{
-			Level.LevelChanged += () =>
+			Level.BeforeLevelChanged += () =>
 			{
 				_inactivePool.Clear();
 				_activePool.Clear();
