@@ -16,7 +16,7 @@ namespace BulletBrigade
 			_safesText = transform.Find("SafesText").GetComponent<TMP_Text>();
 			_enemiesText = transform.Find("EnemiesText").GetComponent<TMP_Text>();
 
-			Level.BeforeLevelChanged += RefreshUI;
+			Level.AfterLevelChanged += RefreshUI;
 			Safe.SafeCollected += UpdateSafeCount;
 			Enemy.EnemyDied += UpdateEnemyCount;
 		}

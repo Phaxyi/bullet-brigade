@@ -9,6 +9,7 @@ namespace BulletBrigade {
 	public class Level : MonoBehaviour
 	{
 		public static Action BeforeLevelChanged;
+		public static Action AfterLevelChanged;
 
 		public static float LevelStartTime { get; private set; }
 		public static float Score { get; private set; }
@@ -26,7 +27,7 @@ namespace BulletBrigade {
 			Enemy.EnemyDied += () => KilledEnemies++;
 			Safe.SafeCollected += () => CollectedSafes++;
 			Player.PlayerDied += () => EndLevel(false);
-			Safezone.TouchedExitZone += OnSafezoneEntered;
+			Safezone.EnteredExitZone += OnExitZoneEnter;
 
 			_transition = GameObject.Find("/Transition").GetComponent<TransitionUI>();
 			DontDestroyOnLoad(gameObject);
@@ -35,7 +36,7 @@ namespace BulletBrigade {
 
 		public void StartNewGame()
 		{
-			StartCoroutine(_transition.ShowTransition("starting new game"));
+			StartCoroutine(_transition.ShowTransition());
 			Hearts = 3;
 			StartLevel(0);
 		}
@@ -46,7 +47,7 @@ namespace BulletBrigade {
 			BeforeLevelChanged?.Invoke();
 
 			AsyncOperation operation = SceneManager.LoadSceneAsync(newLevel.ToString(), LoadSceneMode.Single);
-			StartCoroutine(_transition.ShowTransition("test caption please use database"));
+			StartCoroutine(_transition.ShowTransition());
 
 			operation.completed += (x) =>
 			{
@@ -55,7 +56,8 @@ namespace BulletBrigade {
 				TotalSafes = GameObject.Find("/Safes").transform.childCount;
 				CollectedSafes = 0;
 				KilledEnemies = 0;
-				// AfterLevelChanged?.Invoke();
+				
+				AfterLevelChanged?.Invoke();
 			};
 		} 
 
@@ -78,7 +80,7 @@ namespace BulletBrigade {
 			StartLevel(CurrentLevel);
 		}
 
-		private void OnSafezoneEntered()
+		private void OnExitZoneEnter()
 		{
 			if (CollectedSafes == TotalSafes && KilledEnemies == TotalEnemies)
 			{
