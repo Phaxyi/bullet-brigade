@@ -16,20 +16,20 @@ namespace BulletBrigade
 			_safesText = transform.Find("SafesText").GetComponent<TMP_Text>();
 			_enemiesText = transform.Find("EnemiesText").GetComponent<TMP_Text>();
 
-			Level.AfterLevelChanged += RefreshUI;
+			Game.AfterLevelChanged += RefreshUI;
 			Safe.SafeCollected += UpdateSafeCount;
 			Enemy.EnemyDied += UpdateEnemyCount;
 		}
 
 		private void Update()
 		{
-			TimeSpan passed = TimeSpan.FromSeconds(Time.time - Level.LevelStartTime);
+			TimeSpan passed = TimeSpan.FromSeconds(Time.time - Game.LevelStartTime);
 			_timerText.text = passed.ToString("mm':'ss':'ff");
 		}
 
 		private void RefreshUI()
 		{
-			_levelText.text = $"LEVEL {Level.CurrentLevel}";
+			_levelText.text = $"LEVEL {Game.CurrentLevel}";
 			// initial refresh
 			UpdateSafeCount();
 			UpdateEnemyCount();
@@ -37,8 +37,8 @@ namespace BulletBrigade
 
 		private void UpdateSafeCount()
 		{
-			_safesText.text = $"{Level.CollectedSafes} / {Level.TotalSafes} safes";
-			if (Level.CollectedSafes == Level.TotalSafes)
+			_safesText.text = $"{Game.CollectedSafes} / {Game.TotalSafes} safes";
+			if (Game.CollectedSafes == Game.TotalSafes)
 			{
 				_safesText.DOColor(Color.darkGreen, 0.5f);
 			}
@@ -46,8 +46,8 @@ namespace BulletBrigade
 
 		private void UpdateEnemyCount()
 		{
-			_enemiesText.text = $"{Level.KilledEnemies} / {Level.TotalEnemies} killed";
-			if (Level.KilledEnemies == Level.TotalEnemies)
+			_enemiesText.text = $"{Game.KilledEnemies} / {Game.TotalEnemies} killed";
+			if (Game.KilledEnemies == Game.TotalEnemies)
 			{
 				_enemiesText.DOColor(Color.darkGreen, 0.5f);
 			}

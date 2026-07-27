@@ -35,7 +35,7 @@ namespace BulletBrigade {
 
 		static Gun()
 		{
-			Level.BeforeLevelChanged += () => _inputBoundGuns.Clear();
+			Game.BeforeLevelChanged += () => _inputBoundGuns.Clear();
 		}
 
 		private void Awake()
@@ -88,7 +88,6 @@ namespace BulletBrigade {
 
 		private void OnFire(InputValue _)
 		{
-			Debug.Log(_inputBoundGuns.Count);
 			foreach (Gun manualGun in _inputBoundGuns)
 			{
 				manualGun.TryShoot();

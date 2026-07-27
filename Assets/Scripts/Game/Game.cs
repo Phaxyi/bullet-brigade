@@ -6,11 +6,12 @@ namespace BulletBrigade {
 	/// <summary>
 	/// Handles levels. Persists throughout scenes.
 	/// </summary>
-	public class Level : MonoBehaviour
+	public class Game : MonoBehaviour
 	{
 		public static Action BeforeLevelChanged;
 		public static Action AfterLevelChanged;
 
+		public static bool IsGameActive { get; private set; }
 		public static float LevelStartTime { get; private set; }
 		public static float Score { get; private set; }
 		public static int CurrentLevel { get; private set; }
@@ -21,6 +22,7 @@ namespace BulletBrigade {
 		public static int TotalEnemies { get; private set; }
 
 		private TransitionUI _transition;
+		private TitleScreen _titleScreenScr;
 
 		private void Awake()
 		{
@@ -30,15 +32,28 @@ namespace BulletBrigade {
 			Safezone.EnteredExitZone += OnExitZoneEnter;
 
 			_transition = GameObject.Find("/Transition").GetComponent<TransitionUI>();
+			_titleScreenScr = gameObject.GetComponent<TitleScreen>();
+
 			DontDestroyOnLoad(gameObject);
-			DontDestroyOnLoad(_transition);
+			DontDestroyOnLoad(_transition); // TODO: remove
 		}
 
 		public void StartNewGame()
 		{
-			StartCoroutine(_transition.ShowTransition());
+			IsGameActive = true;
 			Hearts = 3;
+			Score = 0;
+
+			_titleScreenScr.enabled = false;
 			StartLevel(0);
+		}
+
+		public void ReturnToTitle()
+		{
+			IsGameActive = false;
+
+			AsyncOperation operation = SceneManager.LoadSceneAsync("Title", LoadSceneMode.Single);
+			operation.completed += (x) => _titleScreenScr.enabled = true;
 		}
 
 		private void StartLevel(int newLevel)
@@ -74,7 +89,7 @@ namespace BulletBrigade {
 			Hearts--;
 			if (Hearts == 0)
 			{
-				StartNewGame();
+				ReturnToTitle();
 				return;
 			}
 			StartLevel(CurrentLevel);

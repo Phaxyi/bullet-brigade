@@ -50,7 +50,7 @@ namespace BulletBrigade {
 			int i = 1;
 			foreach (Image heart in _hearts)
 			{
-				heart.color = Level.Hearts >= i ? Color.red : Color.black;
+				heart.color = Game.Hearts >= i ? Color.red : Color.black;
 				i++;
 			}
 		}

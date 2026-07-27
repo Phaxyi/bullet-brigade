@@ -57,7 +57,7 @@ namespace BulletBrigade {
 		private void OnDied()
 		{
 			PlayerDied?.Invoke();
-			Debug.Log("im dead (Player.cs)");
+			Debug.Log("to implement death VFX (Player.cs)");
 		} 
 
 		// INPUT

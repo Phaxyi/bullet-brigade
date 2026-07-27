@@ -30,14 +30,14 @@ namespace BulletBrigade
 		// it's cleaner to have a single function rather than listening to events in Level.cs
 		public IEnumerator ShowTransition(string captionOverride = null, Color? color = null, float time = 0.7f)
 		{
-			int level = Level.CurrentLevel;
+			int level = Game.CurrentLevel;
 
 			_levelNumber.text = level.ToString();
 			_caption.text = captionOverride
 				?? (Database.levelMsgs.TryGetValue(level, out string caption)
 					? caption
 					: "ERROR: CAPTION NOT FOUND");
-			_score.text = $"score: {Mathf.Floor(Level.Score)}";
+			_score.text = $"score: {Mathf.Floor(Game.Score)}";
 
 			_canvasGraphic.color = color ?? Color.brown;
 			_canvas.enabled = true;

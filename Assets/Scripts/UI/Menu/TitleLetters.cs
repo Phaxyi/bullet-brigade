@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace BulletBrigade
 {
+	/// <summary>
+	/// Animates the game title.
+	/// </summary>
 	public class TitleLetters : MonoBehaviour
 	{
-		private const string Text = "Bullet_Brigade";
+		// space doesn't work (already tried other whitespaces & TMP doesn't detect it)
+		// settle for underscore '_' instead
+		private const string TITLE = "Bullet_Brigade";
+
 		private readonly List<TMP_Text> _letters = new();
 		private Transform _letterToClone;
 		private float _startTime;
@@ -16,7 +22,7 @@ namespace BulletBrigade
 			_startTime = Time.time;
 			_letterToClone = transform.Find("Letter");
 			
-			foreach(char letterChar in Text)
+			foreach(char letterChar in TITLE)
 			{
 				Transform clone = Instantiate(_letterToClone, transform);
 				TMP_Text text = clone.GetComponent<TMP_Text>();
@@ -35,7 +41,7 @@ namespace BulletBrigade
 
 			foreach (TMP_Text letter in _letters)
 			{
-				letter.fontSize = 180 + Mathf.Sin(diff + i*0.175f) * 20;
+				letter.fontSize = 180 + Mathf.Sin(diff + i*0.2f) * 20;
 				i++;
 			}
 		}
