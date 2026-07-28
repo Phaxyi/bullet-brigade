@@ -1420,7 +1420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1768482953}
   m_Layer: 0
-  m_Name: Persistent
+  m_Name: VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1716,6 +1716,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 556046597}
+  - {fileID: 1699873586}
+  - {fileID: 1768482953}
   - {fileID: 2012993905}
   - {fileID: 719039639}
   - {fileID: 859798008}
@@ -1723,7 +1725,5 @@ SceneRoots:
   - {fileID: 2048195887}
   - {fileID: 2060215850}
   - {fileID: 1230357364}
-  - {fileID: 1768482953}
-  - {fileID: 1699873586}
   - {fileID: 885962821}
   - {fileID: 918533378}

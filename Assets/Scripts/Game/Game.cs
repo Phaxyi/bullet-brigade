@@ -31,11 +31,10 @@ namespace BulletBrigade {
 			Player.PlayerDied += () => EndLevel(false);
 			Safezone.EnteredExitZone += OnExitZoneEnter;
 
-			_transition = GameObject.Find("/Transition").GetComponent<TransitionUI>();
+			_transition = transform.Find("Transition").GetComponent<TransitionUI>();
 			_titleScreenScr = gameObject.GetComponent<TitleScreen>();
 
 			DontDestroyOnLoad(gameObject);
-			DontDestroyOnLoad(_transition); // TODO: remove
 		}
 
 		public void StartNewGame()

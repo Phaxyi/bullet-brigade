@@ -20,7 +20,7 @@ namespace BulletBrigade {
 		[SerializeField] private float _moveSpeed = 4f;
 		[SerializeField] private float _dashDistance = 2f;
 
-		private Transform _persistent;
+		private Transform _VFXHolder;
 		private Transform _renderer;
 		private Vector2 _moveDir = Vector2.zero;
 		private Rigidbody2D _rb;
@@ -30,7 +30,7 @@ namespace BulletBrigade {
 			entity = GetComponent<Entity>();
 			entity.onDied += OnDied;
 
-			_persistent = GameObject.Find("Persistent").transform;
+			_VFXHolder = GameObject.Find("VFX").transform;
 			_renderer = transform.Find("Renderer");
 			_rb = GetComponent<Rigidbody2D>();
 		}
@@ -88,7 +88,7 @@ namespace BulletBrigade {
 					_renderer,
 					(Vector3)oldPos + transform.up * dist,
 					transform.rotation,
-					_persistent
+					_VFXHolder
 				);
 				SpriteRenderer afterRd = afterimage.GetComponent<SpriteRenderer>();
 
