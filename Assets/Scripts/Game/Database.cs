@@ -1,19 +1,39 @@
 using System.Collections.Generic;
+using System.ComponentModel;
+using UnityEngine.InputSystem.Utilities;
 
 namespace BulletBrigade
 {
 	/// <summary>
 	/// Holds unchanging data e.g. level messages
 	/// </summary>
+	
+	// TODO: change struct to readonly
+	public struct LevelData
+	{
+		public string Name;
+		public string Desc;
+		public string TransitionMsg;
+	}
+
 	public static class Database
 	{
-		public static readonly Dictionary<int, string> levelMsgs = new()
-		{
-			{0, "we're just getting started..."},
-			{1, "oh, now we're talking"},
+		public static readonly LevelData[] LevelData = {
+			new()
+			{
+				Name = "START",
+				Desc = "the start of Hell",
+				TransitionMsg = "are you ready for whats to come?",
+			},
+			new()
+			{
+				Name = "one",
+				Desc = "asdasdadad",
+				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
+			}
 		};
 
 		// TODO: fill these out
-		public static readonly string[] ChaserMsgs = {};
+		public static readonly string[] chaserMsgs = {};
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,12 +48,18 @@ namespace BulletBrigade {
 			StartLevel(0);
 		}
 
-		public void ReturnToTitle()
+		private void ReturnToTitle()
 		{
 			IsGameActive = false;
 
 			AsyncOperation operation = SceneManager.LoadSceneAsync("Title", LoadSceneMode.Single);
 			operation.completed += (x) => _titleScreenScr.enabled = true;
+		}
+
+		private void WinGame()
+		{
+			// TODO:
+			ReturnToTitle();
 		}
 
 		private void StartLevel(int newLevel)
@@ -79,8 +86,13 @@ namespace BulletBrigade {
 		{
 			if (win)
 			{
-				// basic score calc
-				Score += Mathf.Max(60, 240 - (Time.time - LevelStartTime)) * Hearts/3;
+				Score += Mathf.Max(60, 240 - (Time.time - LevelStartTime)) * Hearts/3; // basic score calc
+
+				if (CurrentLevel + 1 == Database.LevelData.Length)
+				{
+					WinGame();
+					return;
+				}
 				StartLevel(CurrentLevel + 1);
 				return;
 			}

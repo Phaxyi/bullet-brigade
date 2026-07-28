@@ -33,11 +33,11 @@ namespace BulletBrigade
 			int level = Game.CurrentLevel;
 
 			_levelNumber.text = level.ToString();
-			_caption.text = captionOverride
-				?? (Database.levelMsgs.TryGetValue(level, out string caption)
-					? caption
-					: "ERROR: CAPTION NOT FOUND");
 			_score.text = $"score: {Mathf.Floor(Game.Score)}";
+			_caption.text = captionOverride
+				?? (level < Database.LevelData.Length
+					? Database.LevelData[level].TransitionMsg
+					: "ERROR: CAPTION NOT FOUND");
 
 			_canvasGraphic.color = color ?? Color.brown;
 			_canvas.enabled = true;
