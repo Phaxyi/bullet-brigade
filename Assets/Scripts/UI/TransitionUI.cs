@@ -11,7 +11,7 @@ namespace BulletBrigade
 	/// </summary>
 	public class TransitionUI : MonoBehaviour
 	{
-		private Canvas _canvas;
+		private CanvasGroup _canvasGroup;
 		private Graphic _canvasGraphic;
 		private TMP_Text _levelNumber;
 		private TMP_Text _caption;
@@ -19,7 +19,7 @@ namespace BulletBrigade
 
 		private void Awake()
 		{
-			_canvas = GetComponent<Canvas>();
+			_canvasGroup = GetComponent<CanvasGroup>();
 			_canvasGraphic = GetComponent<Graphic>();
 
 			_levelNumber = transform.Find("LevelNumber").GetComponent<TMP_Text>();
@@ -40,10 +40,10 @@ namespace BulletBrigade
 					: "ERROR: CAPTION NOT FOUND");
 
 			_canvasGraphic.color = color ?? Color.brown;
-			_canvas.enabled = true;
+			_canvasGroup.alpha = 1;
 			yield return new WaitForSeconds(time);
 
-			_canvas.enabled = false;
+			_canvasGroup.alpha = 0;
 		}
 	}
 }

@@ -29,6 +29,7 @@ namespace BulletBrigade {
 		[SerializeField] private float _bulletDamage = 10; 
 		[SerializeField] private int _maxBounces = 1;
 
+		private PlayerInput _input;
 		private Entity _entity;
 		private Enemy _enemy;
 		private float _lastShootTime = Mathf.NegativeInfinity;
@@ -36,6 +37,7 @@ namespace BulletBrigade {
 		static Gun()
 		{
 			Game.BeforeLevelChanged += () => _inputBoundGuns.Clear();
+			Game.AfterGameEnded += () => _inputBoundGuns.Clear();
 		}
 
 		private void Awake()
@@ -44,8 +46,16 @@ namespace BulletBrigade {
 			_enemy = gameObject.GetComponent<Enemy>();
 			BulletsInMag = MagazineSize;
 
+			_input = GameObject.Find("/InputObj").GetComponent<PlayerInput>();
+			_input.onActionTriggered += OnFire;
+
 			if (_manualControl) _inputBoundGuns.Add(this);
 			else StartCoroutine(AutoShoot());
+		}
+
+		private void OnDestroy()
+		{
+			_input.onActionTriggered -= OnFire;
 		}
 
 		private IEnumerator AutoShoot()
@@ -62,7 +72,7 @@ namespace BulletBrigade {
 			}
 		}
 
-		public void TryShoot()
+		private void TryShoot()
 		{
 			if (_entity.dead || _entity.invincible
 				|| Time.time - LastReloadTime < ReloadCooldown
@@ -86,8 +96,9 @@ namespace BulletBrigade {
 			Bullet.Spawn(_bulletPrefab, transform, _bulletSpeed, _bulletDamage, _maxBounces, _damageEnemies, false);
 		}
 
-		private void OnFire(InputValue _)
+		private void OnFire(InputAction.CallbackContext context)
 		{
+			if (context.action.name != "Fire") return;
 			foreach (Gun manualGun in _inputBoundGuns)
 			{
 				manualGun.TryShoot();

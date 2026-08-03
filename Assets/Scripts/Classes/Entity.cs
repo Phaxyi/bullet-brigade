@@ -58,7 +58,7 @@ namespace BulletBrigade
 
 		public void TryTakeDamage(float damage)
 		{
-			if (dead || invincible) return;
+			if (damage != float.PositiveInfinity && (dead || invincible)) return;
 
 			health = Mathf.Clamp(health - damage, 0, maxHealth);
 			if (health <= 0)

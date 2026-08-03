@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEngine.InputSystem.Utilities;
-
 namespace BulletBrigade
 {
 	/// <summary>

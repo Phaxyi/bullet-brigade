@@ -20,6 +20,7 @@ namespace BulletBrigade {
 		[SerializeField] private float _moveSpeed = 4f;
 		[SerializeField] private float _dashDistance = 2f;
 
+		private PlayerInput _input;
 		private Transform _VFXHolder;
 		private Transform _renderer;
 		private Vector2 _moveDir = Vector2.zero;
@@ -33,6 +34,16 @@ namespace BulletBrigade {
 			_VFXHolder = GameObject.Find("VFX").transform;
 			_renderer = transform.Find("Renderer");
 			_rb = GetComponent<Rigidbody2D>();
+
+			_input = GameObject.Find("/InputObj").GetComponent<PlayerInput>();
+			_input.onActionTriggered += OnMove;
+			_input.onActionTriggered += OnDash;
+		}
+
+		private void OnDestroy()
+		{
+			_input.onActionTriggered -= OnMove;
+			_input.onActionTriggered -= OnDash;
 		}
 
 		private void FixedUpdate()
@@ -61,10 +72,15 @@ namespace BulletBrigade {
 		} 
 
 		// INPUT
-		private void OnMove(InputValue inputVal) => _moveDir = inputVal.Get<Vector2>();
-
-		private void OnDash(InputValue _)
+		private void OnMove(InputAction.CallbackContext context)
 		{
+			if (context.action.name != "Move") return;
+			_moveDir = context.action.ReadValue<Vector2>();
+		}
+
+		private void OnDash(InputAction.CallbackContext context)
+		{
+			if (context.action.name != "Dash") return;
 			if (entity.dead || entity.invincible || Time.time - LastDashTime < DashCooldown) return;
 			LastDashTime = Time.time;
 
