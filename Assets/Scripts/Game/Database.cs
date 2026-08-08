@@ -10,6 +10,7 @@ namespace BulletBrigade
 		public string Name;
 		public string Desc;
 		public string TransitionMsg;
+		public int KillsNeeded;  // -1 for all enemies
 	}
 
 	public static class Database
@@ -20,24 +21,28 @@ namespace BulletBrigade
 				Name = "START",
 				Desc = "the start of Hell",
 				TransitionMsg = "are you ready for whats to come?",
+				KillsNeeded = -1,
 			},
 			new()
 			{
 				Name = "one",
 				Desc = "asdasdadad",
 				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
+				KillsNeeded = -1,
 			},
 			new()
 			{
 				Name = "two",
 				Desc = "asdasdadad",
 				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
+				KillsNeeded = -1,
 			},
 			new()
 			{
 				Name = "three",
 				Desc = "asdasdadad",
 				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
+				KillsNeeded = 0,
 			},
 		};
 	}

@@ -38,9 +38,9 @@ namespace BulletBrigade {
 			instance = this;
 			DontDestroyOnLoad(gameObject);
 
-			Enemy.EnemyDied += () => KilledEnemies++;
-			Safe.SafeCollected += () => CollectedSafes++;
-			Player.PlayerDied += () => EndLevel(false);
+			Enemy.EnemyDied += OnEnemyDied;
+			Safe.SafeCollected += OnSafeCollected;
+			Player.PlayerDied += OnPlayerDied;
 			Safezone.EnteredExitZone += OnExitZoneEnter;
 
 			_transition = transform.Find("Canvas/Transition").GetComponent<TransitionUI>();
@@ -52,8 +52,17 @@ namespace BulletBrigade {
 			_input.onActionTriggered += OnEnterKey;
 		}
 
+		private void OnEnemyDied() => KilledEnemies++;
+		private void OnSafeCollected() => CollectedSafes++;
+		private void OnPlayerDied() => EndLevel(false);
+
 		private void OnDestroy()
 		{
+			Enemy.EnemyDied -= OnEnemyDied;
+			Safe.SafeCollected -= OnSafeCollected;
+			Player.PlayerDied -= OnPlayerDied;
+			Safezone.EnteredExitZone -= OnExitZoneEnter;
+
 			_input.onActionTriggered -= OnEscKey;
 			_input.onActionTriggered -= OnEnterKey;
 		}
@@ -102,10 +111,12 @@ namespace BulletBrigade {
 			operation.completed += (x) =>
 			{
 				LevelStartTime = Time.time;
-				TotalEnemies = GameObject.Find("/Enemies").transform.childCount;
 				TotalSafes = GameObject.Find("/Safes").transform.childCount;
 				CollectedSafes = 0;
 				KilledEnemies = 0;
+				TotalEnemies = Database.LevelData[newLevel].KillsNeeded == -1
+					? GameObject.Find("/Enemies").transform.childCount
+					: Database.LevelData[newLevel].KillsNeeded;
 				
 				AfterLevelChanged?.Invoke();
 			};
