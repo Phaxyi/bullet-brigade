@@ -26,10 +26,19 @@ namespace BulletBrigade
 				Name = "one",
 				Desc = "asdasdadad",
 				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
-			}
+			},
+			new()
+			{
+				Name = "two",
+				Desc = "asdasdadad",
+				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
+			},
+			new()
+			{
+				Name = "three",
+				Desc = "asdasdadad",
+				TransitionMsg = "ardgdsgdsgfdgdfsdgme?",
+			},
 		};
-
-		// TODO: fill these out
-		public static readonly string[] chaserMsgs = {};
 	}
 }

@@ -9,12 +9,13 @@ namespace BulletBrigade
 	{
 		// TODO: like a Lot of configs
 		[SerializeField] private float _fullSpinDuration = 1;
+		[SerializeField] private bool _clockwise = true;
 
 		private void FixedUpdate()
 		{
 			// TODO: wrong duration
 			float degrees = Time.fixedDeltaTime * 360 / _fullSpinDuration;
-			transform.Rotate(Vector3.forward * degrees);
+			transform.Rotate(Vector3.forward * degrees * (_clockwise ? -1 : 1));
 		}
 	}
 }

@@ -97,7 +97,7 @@ namespace BulletBrigade {
 			foreach (var pair in _wallPhaseMap)
 			{
 				float phase = pair.Value;
-				float interval = (timePassed + phase) % _pathDuration / _pathDuration;
+				float interval = (timePassed + _pathDuration*phase) % _pathDuration / _pathDuration;
 
 				pair.Key.position = GetWallPos(interval);
 			}

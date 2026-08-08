@@ -257,7 +257,7 @@ MonoBehaviour:
   entity: {fileID: 0}
   usingSafeZone: 0
   _rotateSpeed: 300
-  _moveSpeed: 4
+  _moveSpeed: 3.5
   _dashDistance: 2
 --- !u!114 &4807973688139978430
 MonoBehaviour:

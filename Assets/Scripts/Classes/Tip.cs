@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace BulletBrigade
 		public Color visColor = new Color(1, 1, 1, 1);
 		public Color invisColor = new Color(1, 1, 1, 0);
 		public string text = "[TEXT MISSING]";
-		public float triggerDistance = 5f;
+		public float triggerDistance = 10f;
 
 		private TMP_Text _spawnedTip;
 		private Transform _plrTransform;
@@ -29,6 +28,8 @@ namespace BulletBrigade
 			_spawnedTip.text = text;
 			_spawnedTip.font = fontAsset;
 			tempSpawnedTip.GetComponent<TMP_Text>().color = _spawnedTip.color = invisColor;
+
+			// GetComponent<SpriteRenderer>().enabled = false;
 		}
 
 		private void Update()
